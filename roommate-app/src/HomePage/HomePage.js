@@ -7,8 +7,8 @@ export default function HomePage() {
 
     return (
         <View>
-            <FeatureTile/>
-            <Button title="Go to test" onPress={() => navigation.navigate('Tester')} />
+            <FeatureTile />
+            <Button title="Go to test" onPress={() => navigation.navigate('Settings')} />
         </View>
-    )
+    );
 }
