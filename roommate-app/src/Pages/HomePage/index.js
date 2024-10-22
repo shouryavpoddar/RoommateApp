@@ -1,7 +1,7 @@
 import { View, ScrollView } from 'react-native';
-import FeatureTile from './FeatureTile';
+import FeatureTile from './Components/FeatureTile';
 import { useNavigation } from '@react-navigation/native';
-import CalendarWidget from "../Pages/Calander/PageLayout/Components/CalendarWidget/homeWidget";
+import CalendarWidget from "../Calander/PageLayout/Components/CalendarWidget/homeWidget";
 
 export default function HomePage() {
     const navigation = useNavigation();
