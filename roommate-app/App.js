@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Tabs from "./src/Components/Tabs";
 import HomePage from "./src/HomePage/HomePage";
 import Tester from "./src/HomePage/Tester";
-import Calender from "./src/Pages/Calander";
+import Calendar from "./src/Pages/Calander";
 import {Provider} from "react-redux";
 import {store} from "./src/StateManagement/store";
 
@@ -14,7 +14,7 @@ export default function App() {
     const pagesList = [
         { name: "Home", component: HomePage },
         { name: "Settings", component: Tester },
-        {name: "Calender", component: Calender}
+        {name: "Calendar", component: Calendar}
     ];
 
     return (
