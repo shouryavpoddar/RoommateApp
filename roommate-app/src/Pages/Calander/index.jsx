@@ -23,7 +23,7 @@ const CalenderPage = ({ navigation }) => {
     return (
         <Layout>
             <Layout.CalendarSection>
-                <CalendarWidget tasks={tasks} />
+                <CalendarWidget/>
             </Layout.CalendarSection>
 
 

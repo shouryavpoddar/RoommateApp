@@ -1,64 +1,58 @@
-import React, {useContext, useState} from 'react';
-import {Text, TextInput, Button} from 'react-native';
-import {CalendarContext} from "../../../Context";
-
+import React, { useState, useContext } from 'react';
+import { Text, TextInput, Button } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { CalendarContext } from '../../../Context';
+import { addTask } from '../../../../../StateManagement/Slices/CalendarSlice';
+import uuid from 'react-native-uuid';
 
 const AddEventModal = () => {
-    const {setIsAddEventModalVisible} = useContext(CalendarContext);
+    const { selectedDate, setIsAddEventModalVisible } = useContext(CalendarContext); // Get selectedDate from the context
+    const dispatch = useDispatch();
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [due, setDue] = useState('');
-
-    const onAddEvent = (newEvent) => {
-        // // Add new event to the selected date in the tasks
-        // setTasks((prevTasks) => ({
-        //     ...prevTasks,
-        //     [selectedDate]: [...(prevTasks[selectedDate] || []), newEvent]
-        // }));
-    };
 
     const handleSubmit = () => {
         const newEvent = {
             title,
             description,
             due,
-            created: 'User X', // Static for now; can be dynamic
         };
-        onAddEvent(newEvent); // redux dispatch
-        setIsAddEventModalVisible(false);
+
+        // Dispatch the new task to Redux
+        dispatch(addTask({ date: selectedDate, task: newEvent }));
+
+        setIsAddEventModalVisible(false); // Close modal after submitting
     };
 
     return (
-       <>
-           <Text className="text-xl font-bold mb-4">Add Event</Text>
+        <>
+            <Text className="text-xl font-bold mb-4">Add Event</Text>
 
-           {/* Title Field */}
-           <Text className="text-base text-[#4A154B] text-left font-semibold mb-2  w-full">Title</Text>
-           <TextInput
-               value={title}
-               onChangeText={setTitle}
-               className="border border-gray-300 p-2 mb-4 w-full"
-           />
+            <Text className="text-base text-[#4A154B] text-left font-semibold mb-2 w-full">Title</Text>
+            <TextInput
+                value={title}
+                onChangeText={setTitle}
+                className="border border-gray-300 p-2 mb-4 w-full"
+            />
 
-           {/* Description Field */}
-           <Text className="text-base text-[#4A154B] text-left font-semibold mb-2  w-full">Description</Text>
-           <TextInput
-               value={description}
-               onChangeText={setDescription}
-               className="border border-gray-300 p-2 mb-4 w-full"
-           />
+            <Text className="text-base text-[#4A154B] text-left font-semibold mb-2 w-full">Description</Text>
+            <TextInput
+                value={description}
+                onChangeText={setDescription}
+                className="border border-gray-300 p-2 mb-4 w-full"
+            />
 
-           {/* Due Time Field */}
-           <Text className="text-base text-[#4A154B] text-left font-semibold mb-2 w-full">Due Time</Text>
-           <TextInput
-               value={due}
-               onChangeText={setDue}
-               className="border border-gray-300 p-2 mb-4 w-full"
-           />
+            <Text className="text-base text-[#4A154B] text-left font-semibold mb-2 w-full">Due Time</Text>
+            <TextInput
+                value={due}
+                onChangeText={setDue}
+                className="border border-gray-300 p-2 mb-4 w-full"
+            />
 
-           <Button title="Add" onPress={handleSubmit} />
-       </>
+            <Button title="Add" onPress={handleSubmit} />
+        </>
     );
 };
 

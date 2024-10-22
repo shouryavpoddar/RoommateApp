@@ -1,17 +1,10 @@
 import {Calendar} from "react-native-calendars";
-import React, {useContext,} from "react";
-import {CalendarContext} from "../../../Context";
+import React from "react";
 import {useSelector} from "react-redux";
 
 
 const CalendarWidget = ()=>{
     const {tasks} = useSelector(state => state.calendar);
-
-    const { selectedDate, setSelectedDate } = useContext(CalendarContext);
-
-    const onDayPress = (day) => {
-        setSelectedDate(day.dateString);
-    };
 
     const getMarkedDates = () => {
         const marked = {};
@@ -30,13 +23,6 @@ const CalendarWidget = ()=>{
         });
 
         // Highlight the selected date with a circle but preserve the dots
-        if (selectedDate) {
-            marked[selectedDate] = {
-                ...marked[selectedDate], // Preserve existing dots
-                selected: true,
-                selectedColor: '#2BAC76', // Circle color for selected day
-            };
-        }
 
         return marked;
     };
@@ -57,7 +43,6 @@ const CalendarWidget = ()=>{
                 dotColor: '#4A154B',
                 selectedDotColor: '#4A154B',
             }}
-            onDayPress={onDayPress}
             markedDates={getMarkedDates()} // Pass marked dates with dots and selection
             markingType={'multi-dot'} // Enable multi-dot marking type
         />

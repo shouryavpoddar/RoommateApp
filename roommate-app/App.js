@@ -6,6 +6,8 @@ import Tabs from "./src/Components/Tabs";
 import HomePage from "./src/HomePage/HomePage";
 import Tester from "./src/HomePage/Tester";
 import Calender from "./src/Pages/Calander";
+import {Provider} from "react-redux";
+import {store} from "./src/StateManagement/store";
 
 export default function App() {
 
@@ -16,6 +18,8 @@ export default function App() {
     ];
 
     return (
-        <Tabs pagesList={pagesList}/>
+        <Provider store={store}>
+            <Tabs pagesList={pagesList}/>
+        </Provider>
     );
 }

@@ -1,9 +1,12 @@
 import {Text, TouchableOpacity, View} from "react-native";
 import React, {useContext} from "react";
 import {CalendarContext} from "../../../Context";
+import {useSelector} from "react-redux";
 
 
-const Task = ({tasks})=>{
+const Task = ()=>{
+    const {tasks} = useSelector(state => state.calendar);
+
     const {selectedDate, setSelectedTask} = useContext(CalendarContext);
 
     return(
