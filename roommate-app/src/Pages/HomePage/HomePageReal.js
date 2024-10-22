@@ -1,5 +1,5 @@
 import { Button, Text, View, ScrollView, TouchableOpacity } from 'react-native';
-import FeatureTile from './FeatureTile';
+import FeatureTile from './FeatureTileReal';
 import { useNavigation } from '@react-navigation/native';
 
 export default function HomePage() {

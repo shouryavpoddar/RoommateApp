@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Text, View, Button, Alert } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomePage from './src/Pages/HomePage/HomePage';
+import HomePage from './src/Pages/HomePage/HomePageReal';
 import Tester from './src/Pages/HomePage/Tester';
 
 

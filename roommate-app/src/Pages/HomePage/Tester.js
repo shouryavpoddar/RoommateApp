@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import FeatureTile from './FeatureTile';
+import FeatureTile from './FeatureTileReal';
 
 export default function HomePage() {
     return (
