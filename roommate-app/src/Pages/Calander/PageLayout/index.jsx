@@ -1,23 +1,7 @@
-import React, {createContext, useContext, useLayoutEffect, useState} from "react";
+import React, { useContext, useLayoutEffect} from "react";
 import {Modal, ScrollView, TouchableOpacity, TouchableWithoutFeedback, View,} from "react-native";
-import {getTodayDate} from "../utils";
 import Ionicons from "react-native-vector-icons/Ionicons";
-
-// Create the CalendarContext
-export const CalendarContext = createContext();
-
-// Create a provider component
-const CalendarProvider = ({ children }) => {
-    const [selectedDate, setSelectedDate] = useState(getTodayDate());  // State for selected date
-    const [selectedTask, setSelectedTask] = useState(null); // State for selected task
-    const [isAddEventModalVisible, setIsAddEventModalVisible] = useState(false); // State for Add Event Modal
-
-    return (
-        <CalendarContext.Provider value={{ selectedDate, setSelectedDate, selectedTask, setSelectedTask, isAddEventModalVisible, setIsAddEventModalVisible }}>
-            {children}
-        </CalendarContext.Provider>
-    );
-};
+import {CalendarContext, CalendarProvider} from "../Context";
 
 const Layout = ({ children, ...restProps }) => {
     return (

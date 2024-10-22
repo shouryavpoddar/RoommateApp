@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import { Text, } from 'react-native';
-import {CalendarContext} from "../../index";
+import {CalendarContext} from "../../../Context";
 
 const CalenderEventModal = () => {
     const {selectedTask: task,} = useContext(CalendarContext);

@@ -1,6 +1,7 @@
 import {Text, TouchableOpacity, View} from "react-native";
 import React, {useContext} from "react";
-import {CalendarContext} from "../../index";
+import {CalendarContext} from "../../../Context";
+
 
 const Task = ({tasks})=>{
     const {selectedDate, setSelectedTask} = useContext(CalendarContext);

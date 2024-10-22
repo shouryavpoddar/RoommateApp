@@ -1,6 +1,7 @@
 import {Calendar} from "react-native-calendars";
 import React, {useContext,} from "react";
-import {CalendarContext} from "../../index";
+import {CalendarContext} from "../../../Context";
+
 
 const CalendarWidget = ({ tasks })=>{
 

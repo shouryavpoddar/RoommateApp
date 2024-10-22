@@ -1,6 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {Text, TextInput, Button} from 'react-native';
-import {CalendarContext} from "../../index";
+import {CalendarContext} from "../../../Context";
+
 
 const AddEventModal = () => {
     const {setIsAddEventModalVisible} = useContext(CalendarContext);
