@@ -30,7 +30,7 @@ const CalendarWidget = ()=>{
 
     return(
         //Disable touch events for the calendar
-        <View className="w-full overflow-hidden rounded-md " pointerEvents="none">  
+        <View className="w-full overflow-hidden rounded-md" pointerEvents="none">  
             <Calendar
                 style={{ backgroundColor: '#EDEFF7'}}
                 theme={{
