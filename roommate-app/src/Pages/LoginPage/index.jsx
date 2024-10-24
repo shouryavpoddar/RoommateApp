@@ -30,7 +30,7 @@ const LoginPage = ({ navigation }) => {
 
     return (
         <View className="flex-1 justify-center items-center bg-[#EDEFF7] p-5">
-            <Text className="text-4xl font-bold mb-12 text-[#4A154B] tracking-wider">
+            <Text className="text-4xl text-center font-bold mb-12 text-[#4A154B] tracking-wider">
                 Welcome to Roommate App
             </Text>
 
