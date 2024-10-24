@@ -2,7 +2,7 @@ import { View, ScrollView } from 'react-native';
 import FeatureTile from './Components/FeatureTile';
 import { useNavigation } from '@react-navigation/native';
 import CalendarWidget from "../Calander/PageLayout/Components/CalendarWidget/homeWidget";
-import Updates from './Components/SVP';
+import Updates from './Components/RecentUpdates';
 
 export default function HomePage() {
     const navigation = useNavigation();
@@ -10,9 +10,15 @@ export default function HomePage() {
     return (
         <View>
             <ScrollView className="p-4 bg-[#4a154b]">
-                {/* Row 1: empty wide container waiting for recent events */}
+                {/* Row 1: wide container for recent updates */}
                 <View className="flex-row justify-center mb-3">
-                    <Updates />
+                    <FeatureTile
+                        flex="flex-1"
+                        bgColor="bg-blue-500"
+                        text="Recent Updates"
+                        TileComponent={Updates}
+                        onPress={() => console.log('Should make it so no function pass needed :/')}
+                    />
                 </View>
 
                 {/* Row 2: Two short tiles side by side */}

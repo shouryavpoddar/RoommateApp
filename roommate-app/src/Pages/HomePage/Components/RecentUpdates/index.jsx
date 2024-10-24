@@ -14,8 +14,8 @@ const Updates = () => {
 
     return (
         <>
-            <TouchableOpacity onPress={onOpen}>
-                <View className="bg-blue-700 w-full p-3 rounded-lg">
+            <TouchableOpacity className="w-full " onPress={onOpen}>
+                <View className="bg-blue-700 w-full p-3 items-center rounded-lg">
                     <Text className="text-white">Click me to see updates</Text>
                 </View>
             </TouchableOpacity>
