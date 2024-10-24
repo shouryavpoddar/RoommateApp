@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, Animated } from 'react-native';
+import {useDispatch} from "react-redux";
+import {setId} from "../../StateManagement/Slices/UserSlice";
 
 const LoginPage = ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [scale] = useState(new Animated.Value(1)); // Animation for button press
+    const dispatch = useDispatch();
 
     const handleLogin = () => {
         if (username && password) {
-            navigation.navigate('Home'); // Navigate to Home page
+           dispatch(setId(username));
         } else {
             Alert.alert('Error', 'Please enter both username and password.');
         }
