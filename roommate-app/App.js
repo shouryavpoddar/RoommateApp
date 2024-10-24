@@ -8,13 +8,15 @@ import Tester from "./src/HomePage/Tester";
 import Calender from "./src/Pages/Calander";
 import {Provider} from "react-redux";
 import {store} from "./src/StateManagement/store";
+import LoginPage from "./src/Pages/LoginPage";
 
 export default function App() {
 
     const pagesList = [
         { name: "Home", component: HomePage },
         { name: "Settings", component: Tester },
-        {name: "Calender", component: Calender}
+        {name: "Calender", component: Calender},
+        {name:"Login", component: LoginPage}
     ];
 
     return (
