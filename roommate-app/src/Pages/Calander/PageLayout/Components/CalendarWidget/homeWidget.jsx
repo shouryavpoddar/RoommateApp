@@ -1,6 +1,7 @@
 import {Calendar} from "react-native-calendars";
 import React from "react";
 import {useSelector} from "react-redux";
+import { View } from "react-native";
 
 
 const CalendarWidget = ()=>{
@@ -28,24 +29,28 @@ const CalendarWidget = ()=>{
     };
 
     return(
-        <Calendar
-            style={{ backgroundColor: '#EDEFF7', borderRadius: 10, marginBottom: 10 }}
-            theme={{
-                calendarBackground: '#EDEFF7',
-                textSectionTitleColor: '#2BAC76',
-                selectedDayBackgroundColor: '#2BAC76',
-                selectedDayTextColor: '#FFFFFF',
-                todayTextColor: '#2BAC76',
-                dayTextColor: '#4A154B',
-                arrowColor: '#4A154B',
-                monthTextColor: '#4A154B',
-                textDisabledColor: '#D0D1D2',
-                dotColor: '#4A154B',
-                selectedDotColor: '#4A154B',
-            }}
-            markedDates={getMarkedDates()} // Pass marked dates with dots and selection
-            markingType={'multi-dot'} // Enable multi-dot marking type
-        />
+        //Disable touch events for the calendar
+        <View className="w-full overflow-hidden rounded-md" pointerEvents="none">  
+            <Calendar
+                style={{ backgroundColor: '#EDEFF7'}}
+                theme={{
+                    calendarBackground: '#EDEFF7',
+                    textSectionTitleColor: '#2BAC76',
+                    selectedDayBackgroundColor: '#2BAC76',
+                    selectedDayTextColor: '#FFFFFF',
+                    todayTextColor: '#2BAC76',
+                    dayTextColor: '#4A154B',
+                    arrowColor: '#4A154B',
+                    monthTextColor: '#4A154B',
+                    textDisabledColor: '#D0D1D2',
+                    dotColor: '#4A154B',
+                    selectedDotColor: '#4A154B',
+                }}
+                markedDates={getMarkedDates()} // Pass marked dates with dots and selection
+                markingType={'multi-dot'} // Enable multi-dot marking type
+                hideArrows={true}
+            />
+        </View>
     )
 }
 

@@ -6,7 +6,7 @@ import CalendarWidget from "./PageLayout/Components/CalendarWidget";
 import Tasks from "./PageLayout/Components/Tasks"; // Import the Layout component
 
 
-const CalenderPage = ({ navigation }) => {
+const CalendarPage = ({ navigation }) => {
 
     // Initial example tasks for specific dates
     const [tasks, setTasks] = useState({
@@ -42,4 +42,4 @@ const CalenderPage = ({ navigation }) => {
     );
 };
 
-export default CalenderPage;
+export default CalendarPage;
