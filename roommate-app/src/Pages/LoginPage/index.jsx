@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert, Animated } from 'react-
 import {useDispatch} from "react-redux";
 import {setId} from "../../StateManagement/Slices/UserSlice";
 
-const LoginPage = ({ navigation }) => {
+const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [scale] = useState(new Animated.Value(1)); // Animation for button press
@@ -11,7 +11,7 @@ const LoginPage = ({ navigation }) => {
 
     const handleLogin = () => {
         if (username && password) {
-           dispatch(setId(username));
+            dispatch(setId(username));   
         } else {
             Alert.alert('Error', 'Please enter both username and password.');
         }

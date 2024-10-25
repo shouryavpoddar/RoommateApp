@@ -2,6 +2,19 @@ import { configureStore } from '@reduxjs/toolkit';
 import calendarReducer from './Slices/CalendarSlice';
 import userReducer from './Slices/UserSlice';
 
+// initial state for testing purposes
+export const initialState = {
+    user: { id: null }, // Default to no user logged in
+    calendar: {}, // Default calendar state
+};
+
+// simple root reducer for testing
+export const rootReducer = {
+    user: userReducer,
+    calendar: calendarReducer,
+};
+
+//store configuration
 export const store = configureStore({
     reducer: {
         user: userReducer,

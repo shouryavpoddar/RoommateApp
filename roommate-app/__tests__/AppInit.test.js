@@ -2,7 +2,9 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import App from '../App'; 
 
-//basic test
+//File for testing that app operates as expected when first opening
+
+//SAMPLE TEST - tests that login page is rendered upon opening the app
 //Syntax explanation: test(string description, callback function of code to test)
 test('renders correctly', () => {
     //renders the App component and returns several query functions which can be used to find elements in rendered output
