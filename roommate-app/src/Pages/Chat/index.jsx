@@ -23,23 +23,23 @@ export default function ChatScreen() {
 
                 {/* User's Message Bubble */}
                 <View className="flex-row justify-end mb-3">
-                    <View className="max-w-3/4 bg-purple-400 p-3 rounded-lg">
-                        <Text className="text-white">Hey  ! How’s the cleaning schedule going?</Text>
-                        <Text className="text-xs text-gray-200 mt-1">12:45 PM</Text>
+                    <View className="max-w-3/4 bg-[#8CC49F] p-3 rounded-lg">
+                        <Text className="text-white">Hey! How’s the cleaning schedule going?</Text>
+                        <Text className="text-xs text-gray-200 mt-1">12:55 PM</Text>
                     </View>
                 </View>
             </ScrollView>
 
             {/* Message Input */}
-            <View className="flex-row items-center px-4 py-2 bg-gray-800 border-t border-gray-700">
+            <View className="flex-row items-center px-4 py-2 bg-[#8A7191] mb-2 mx-4 rounded-full">
                 <TextInput
-                    className="flex-1 h-10 px-4 text-gray-200 bg-gray-600 rounded-full"
+                    className="flex-1 h-10 px-4 text-white bg-transparent rounded-full"
                     placeholder="Type a message..."
-                    placeholderTextColor="#888"
+                    placeholderTextColor="#FFFFFF"
                     value={message}
                     onChangeText={setMessage}
                 />
-                <TouchableOpacity className="ml-2 px-4 py-2 bg-purple-700 rounded-full" onPress={() => setMessage('')}>
+                <TouchableOpacity className="ml-2 px-4 py-2 bg-[#4B225F] rounded-full" onPress={() => setMessage('')}>
                     <Text className="text-white font-bold">Send</Text>
                 </TouchableOpacity>
             </View>

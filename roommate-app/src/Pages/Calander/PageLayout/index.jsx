@@ -6,7 +6,7 @@ import {CalendarContext, CalendarProvider} from "../Context";
 const Layout = ({ children, ...restProps }) => {
     return (
         <CalendarProvider>
-            <View className="flex-1 bg-[#4A154B] p-4 text-[#4A154B]" {...restProps}>
+            <View className="flex-1 bg-[#4B225F] p-4 text-[#4A154B]" {...restProps}>
                 {children}
             </View>
         </CalendarProvider>

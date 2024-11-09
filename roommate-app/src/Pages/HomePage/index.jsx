@@ -9,7 +9,7 @@ export default function HomePage() {
 
     return (
         <View>
-            <ScrollView className="p-4 bg-[#4a154b]">
+            <ScrollView className="p-4 bg-[#4B225F]">
                 {/* Row 1: wide container for recent updates */}
                 <View className="flex-row justify-center mb-3" testID="updates-tile">
                     <FeatureTile
