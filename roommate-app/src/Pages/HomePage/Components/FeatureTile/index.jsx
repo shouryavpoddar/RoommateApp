@@ -1,7 +1,5 @@
 import { Text, TouchableOpacity } from 'react-native';
 
-const onPress = () => {console.log("you clicked me!")};
-
 export default function FeatureTile({ bgColor, flex, text, TileComponent, onPress}) {
     return (
         <TouchableOpacity 
