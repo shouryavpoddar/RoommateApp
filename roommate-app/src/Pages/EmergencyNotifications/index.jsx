@@ -1,8 +1,9 @@
 import { ScrollView, View } from 'react-native';
-import EmergencyButton from './Components/EmergencyButton'
 import ButtonGrid from './Components/ButtonGrid'
 import AddButtonModal from './Components/AddButtonModal';
+import EmergencyButtonModal from './Components/EmergencyButtonModal'
 import {useSelector} from "react-redux";
+import {EmergencyContext, EmergencyProvider} from "./Context";
 
 
 // const buttons = [
@@ -16,11 +17,14 @@ export default function EmergencyNotifications( {navigation} ) {
     const {buttons} = useSelector(state => state.emergency);
 
     return (
-        <ScrollView className="p-4 bg-[#4a154b]">
+        <EmergencyProvider>
             <AddButtonModal navigation={navigation}/>
-            <ButtonGrid 
-                buttonData={buttons}
-            />  
-        </ScrollView>
+            <EmergencyButtonModal/>
+            <ScrollView className="p-4 bg-[#4a154b]">
+                <ButtonGrid 
+                    buttonData={buttons}
+                />  
+            </ScrollView>
+        </EmergencyProvider>
     );
 }

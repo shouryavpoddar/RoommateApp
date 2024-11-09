@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'    
 import { TouchableWithoutFeedback, TouchableOpacity, View, Modal, Text, TextInput, Button } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { addEmergencyButton } from '../../../../StateManagement/Slices/EmergencyButtonSlice'
@@ -34,13 +34,15 @@ export default function AddButtonModal({ navigation }) {
     }
 
     // create add button in top nav bar
-    navigation.setOptions({
-        headerRight: () => (
-            <TouchableOpacity onPress={() => setIsAddButtonModalVisible(true)} style={{ marginRight: 15 }}>
-                <Ionicons name="add-circle-outline" size={30} color="black" />
-            </TouchableOpacity>
-        ),
-    });
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity onPress={() => setIsAddButtonModalVisible(true)} style={{ marginRight: 15 }}>
+                    <Ionicons name="add-circle-outline" size={30} color="black" />
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation]);  // Dependency array ensures this only runs once when the component mounts
 
     if(!isAddButtonModalVisible){
         return null;

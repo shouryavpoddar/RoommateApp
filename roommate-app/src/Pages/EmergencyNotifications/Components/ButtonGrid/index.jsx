@@ -25,6 +25,7 @@ export default function ButtonGrid( {buttonData} ) {
               title={button.title}
               message={button.message}
               bgColor={button.bgColor}
+              buttonObject={button}
             />
           ))}
         </View>
