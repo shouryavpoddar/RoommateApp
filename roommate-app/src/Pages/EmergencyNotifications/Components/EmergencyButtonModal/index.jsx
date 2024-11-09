@@ -1,5 +1,5 @@
 import { useEffect, useContext, useState } from 'react'    
-import { Text, TextInput, Button, Modal, TouchableWithoutFeedback, View, Alert } from 'react-native';
+import { Text, TextInput, Button, Modal, TouchableWithoutFeedback, View, Alert, Pressable } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { editEmergencyButton, deleteEmergencyButton } from '../../../../StateManagement/Slices/EmergencyButtonSlice'
 import { EmergencyContext } from '../../Context';
@@ -86,18 +86,43 @@ export default function EmergencyButtonModal() {
                                     onChangeText={setEditedBgColor}
                                     className="border border-gray-300 p-2 mb-4 w-full"
                                 />
-                                <Button title="Save" onPress={handleEdit} />
-                                <Button title="Cancel" onPress={() => setIsEditing(false)} />
+                                <Pressable
+                                    className="bg-[#8CC49F] rounded-md p-4 mb-3 w-full"
+                                    onPress={handleEdit}
+                                >
+                                    <Text className="text-white font-bold text-center">Save</Text>
+                                </Pressable>
+                                <Pressable
+                                    className="bg-[#8CC49F] rounded-md p-4 mb-3 w-full"
+                                    onPress={() => setIsEditing(false)}
+                                >
+                                    <Text className="text-white font-bold text-center">Send Emergency Notification</Text>
+                                </Pressable>
                             </>
                         ) : (
                             <>
-                                <Text className="text-[#4A154B] text-xl font-bold mb-4">{selectedButton.title}</Text>
-                                <Text className="text-[#4A154B] mb-2">{selectedButton.message}</Text>
-                                <Button title="Send Emergency Notification" 
-                                    onPress={handleNotification} 
-                                />
-                                <Button title="Edit" onPress={() => setIsEditing(true)} />
-                                <Button title="Delete" onPress={handleDelete} />
+                                <Text className="text-[#4A154B] text-xl font-bold mb-2">{selectedButton.title}</Text>
+                                <Text className="text-[#4A154B] mb-4 text-center">{`Notification Message: \n${selectedButton.message}`}</Text>
+                                <Pressable
+                                    className="bg-[#8A7191] rounded-md p-4 mb-3 w-full"
+                                    onPress={handleNotification}
+                                >
+                                    <Text className="text-white font-bold text-center">Send Emergency Notification</Text>
+                                </Pressable>
+
+                                <Pressable
+                                    onPress={() => setIsEditing(true)}
+                                    className="bg-[#8CC49F] rounded-md p-4 mb-3 w-full"
+                                >
+                                    <Text className="text-white font-bold text-center">Edit</Text>
+                                </Pressable>
+
+                                <Pressable
+                                    onPress={handleDelete}
+                                    className="bg-red-500 rounded-md p-4 mb-3 w-full"
+                                >
+                                    <Text className="text-white font-bold text-center">Delete</Text>
+                                </Pressable>
                             </>
                         )}
 
