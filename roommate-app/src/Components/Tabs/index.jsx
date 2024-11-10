@@ -1,18 +1,23 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { MaterialIcons, FontAwesome5, Entypo } from '@expo/vector-icons'; // Import icons here
+import { MaterialIcons, FontAwesome5, Entypo } from '@expo/vector-icons';
+import LoginPage from "../../Pages/LoginPage";
+import SignUpPage from "../../Pages/SignUpPage";
 
 const Tabs = ({ pagesList }) => {
     const Tab = createBottomTabNavigator();
-    const { id } = useSelector((state) => state.user);
+    const { id } = useSelector((state) => state.user); // Assuming `id` signifies logged-in state
+    const [isSigningUp, setIsSigningUp] = useState(false); // Track if user is on signup
+
+    // Conditional navigation for Login or Signup
+    const AuthPage = isSigningUp ? SignUpPage : LoginPage;
 
     if (!id) {
-        const LoginPage = pagesList.find(page => page.name === "Login").component;
         return (
             <NavigationContainer>
-                <LoginPage />
+                <AuthPage onSwitch={() => setIsSigningUp(!isSigningUp)} />
             </NavigationContainer>
         );
     }
@@ -22,7 +27,7 @@ const Tabs = ({ pagesList }) => {
             <Tab.Navigator
                 screenOptions={({ route }) => ({
                     headerStyle: {
-                        backgroundColor: '#75597B', // Dark purple header background
+                        backgroundColor: '#75597B',
                         borderBottomWidth: 0,
                         elevation: 0,
                         shadowOpacity: 0,
@@ -31,17 +36,16 @@ const Tabs = ({ pagesList }) => {
                     headerTitleStyle: { fontSize: 24, fontWeight: 'bold' },
                     headerTitleAlign: 'left',
                     tabBarStyle: {
-                        backgroundColor: '#75597B', // Dark purple footer background
+                        backgroundColor: '#75597B',
                         borderTopWidth: 0,
                     },
                     tabBarLabelStyle: {
-                        color: '#FFFFFF', // Footer text in white
+                        color: '#FFFFFF',
                         fontSize: 12,
                         fontWeight: 'bold',
                     },
                     tabBarIcon: ({ color }) => {
-                        // Set different icons based on route name with a fixed size
-                        const iconSize = 20; // Adjust the icon size here
+                        const iconSize = 20;
                         if (route.name === 'Home') {
                             return <MaterialIcons name="home" size={iconSize} color={color} />;
                         } else if (route.name === 'Settings') {
@@ -54,7 +58,7 @@ const Tabs = ({ pagesList }) => {
                         return null;
                     },
                     tabBarActiveTintColor: '#FFFFFF',
-                    tabBarInactiveTintColor: '#D3D3D3', // Adjust inactive color if needed
+                    tabBarInactiveTintColor: '#D3D3D3',
                 })}
             >
                 {pagesList
