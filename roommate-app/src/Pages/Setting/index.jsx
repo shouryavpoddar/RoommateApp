@@ -4,12 +4,18 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../StateManagement/Slices/UserSlice';
 import ProfileModal from './Components/ProfileModal';
 import PasswordModal from './Components/PasswordModal';
+import TermsOfServiceModal from './Components/TermsOfServiceModal';
+import PrivacyPolicyModal from './Components/PrivacyPolicyModal';
 import { SettingsContext, SettingsProvider } from './Context';
 
 function SettingsScreenContent() {
     const [isNotificationsEnabled, setNotificationsEnabled] = useState(true);
     const dispatch = useDispatch();
     const { isProfileModalVisible, setIsProfileModalVisible, isPasswordModalVisible, setIsPasswordModalVisible } = useContext(SettingsContext);
+
+    // New state variables for Terms and Privacy modals
+    const [isTermsModalVisible, setIsTermsModalVisible] = useState(false);
+    const [isPrivacyModalVisible, setIsPrivacyModalVisible] = useState(false);
 
     const handleLogout = () => {
         Alert.alert(
@@ -51,10 +57,10 @@ function SettingsScreenContent() {
 
                 <View className="bg-white p-4 rounded-lg shadow">
                     <Text className="text-lg font-semibold mb-2">About</Text>
-                    <TouchableOpacity className="py-2 border-b border-gray-200">
+                    <TouchableOpacity className="py-2 border-b border-gray-200" onPress={() => setIsTermsModalVisible(true)}>
                         <Text className="text-gray-800">Terms of Service</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity className="py-2 border-b border-gray-200">
+                    <TouchableOpacity className="py-2 border-b border-gray-200" onPress={() => setIsPrivacyModalVisible(true)}>
                         <Text className="text-gray-800">Privacy Policy</Text>
                     </TouchableOpacity>
                     <TouchableOpacity className="py-2">
@@ -62,8 +68,26 @@ function SettingsScreenContent() {
                     </TouchableOpacity>
                 </View>
             </ScrollView>
-            <ProfileModal />
-            <PasswordModal />
+
+            {/* Profile and Password Modals */}
+            <ProfileModal
+                isVisible={isProfileModalVisible}
+                onClose={() => setIsProfileModalVisible(false)}
+            />
+            <PasswordModal
+                isVisible={isPasswordModalVisible}
+                onClose={() => setIsPasswordModalVisible(false)}
+            />
+
+            {/* Terms of Service and Privacy Policy Modals */}
+            <TermsOfServiceModal
+                isVisible={isTermsModalVisible}
+                onClose={() => setIsTermsModalVisible(false)}
+            />
+            <PrivacyPolicyModal
+                isVisible={isPrivacyModalVisible}
+                onClose={() => setIsPrivacyModalVisible(false)}
+            />
         </View>
     );
 }
