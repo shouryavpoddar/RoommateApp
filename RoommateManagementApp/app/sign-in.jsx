@@ -44,36 +44,6 @@ const SignUpPage = () => {
         // }
     };
 
-    // const handleSignUp = () => {
-    //     if (username && email && password && confirmPassword) {
-    //         if (password === confirmPassword) {
-    //             handleAuth();
-    //         } else {
-    //             Alert.alert('Error', 'Passwords do not match.');
-    //         }
-    //     } else {
-    //         Alert.alert('Error', 'Please fill all fields.');
-    //     }
-    // };
-
-    // const handleAuth = async () => {
-    //     try {
-    //         console.log(init);
-    //         auth()
-    //             .createUserWithEmailAndPassword(email, password)
-    //             .then (() => {
-    //                 router.navigate('log-in'); // Redirect to login page
-    //             })          
-    //         // const userCredential = await createUserWithEmailAndPassword(auth, email, password); // Use the auth object from firebase.config.js
-    //         // console.log("User signed up:", userCredential.user);
-    //         // // dispatch(setId(userCredential.user.uid)); // Save user ID to Redux state
-    //         // Alert.alert('Success', 'You have signed up successfully!');
-    //     } catch (error) {
-    //         console.error("Sign up failed:", error.message);
-    //         Alert.alert('Sign up failed', error.message);
-    //     }
-    // };
-
     const animateButton = () => {
         Animated.sequence([
             Animated.timing(scale, { toValue: 0.95, duration: 100, useNativeDriver: true }),
