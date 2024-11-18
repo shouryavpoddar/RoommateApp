@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import {Redirect, router} from "expo-router";
 import {useNavigation} from "expo-router";
 import {setId} from "@/StateManagement/Slices/UserSlice";
+import auth from "react-native-firebase/auth";
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
@@ -14,10 +15,21 @@ const LoginPage = () => {
 
     const handleLogin = () => {
         if (username && password) {
-            dispatch(setId(username));
-            router.replace('/');
+            handleAuth();
         } else {
             Alert.alert('Error', 'Please enter both username and password.');
+        }
+    };
+
+    const handleAuth = async () => {
+        setLoading(true);
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            dispatch(setId(userCredential.user.uid));
+        } catch (e) {
+            Alert.alert('Sign in failed', e.message);
+        } finally {
+            setLoading(false);
         }
     };
 

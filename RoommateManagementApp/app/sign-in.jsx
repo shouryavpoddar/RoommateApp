@@ -16,14 +16,23 @@ const SignUpPage = () => {
     const handleSignUp = () => {
         if (username && email && password && confirmPassword) {
             if (password === confirmPassword) {
-                dispatch(setId(username)); // Assuming successful signup, setting user ID
-                Alert.alert('Success', 'You have signed up successfully!');
-                router.replace('/')
+                handleAuth();
             } else {
                 Alert.alert('Error', 'Passwords do not match.');
             }
         } else {
             Alert.alert('Error', 'Please fill all fields.');
+        }
+    };
+
+    const handleAuth = async () => {
+        try {
+            const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+            console.log("User signed up:", userCredential.user);
+            Alert.alert('Success', 'You have signed up successfully!');
+        } catch (error) {
+            console.error("Sign up failed:", error.message);
+            Alert.alert('Sign up failed', error.message);
         }
     };
 

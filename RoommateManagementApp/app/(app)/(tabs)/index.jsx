@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import FeatureTile from "@/PageElements/HomePage/Components/FeatureTile";
 import Updates from "@/PageElements/HomePage/Components/RecentUpdates";
-import CalendarWidget from "@/PageElements/CalenderPage/Components/CalendarWidget/homeWidget";
+import CalendarWidget from "@/PageElements/CalendarPage/Components/CalendarWidget/homeWidget";
 import {router} from "expo-router";
 
 export default function HomePage() {
@@ -44,7 +44,7 @@ export default function HomePage() {
                         bgColor="#007BFF" // blue
                         text="Wide Tile - Full Width"
                         TileComponent={CalendarWidget}
-                        onPress={() => {router.navigate('Calender')}}
+                        onPress={() => {router.navigate('Calendar')}}
                     />
                 </View>
 

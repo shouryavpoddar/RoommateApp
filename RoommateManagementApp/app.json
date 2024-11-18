@@ -9,14 +9,17 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "bundleIdentifier": "com.roomateapp.in"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.csds393.roommateManagementApp"
+      "googleServicesFile": "./google-services.json",
+      "package": "com.roomateapp.in"
     },
     "web": {
       "bundler": "metro",
@@ -24,6 +27,9 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "@react-native-firebase/crashlytics",
       "expo-router",
       [
         "expo-splash-screen",
@@ -32,6 +38,14 @@
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
         }
       ]
     ],
@@ -45,6 +59,7 @@
       "eas": {
         "projectId": "d99801e9-7bf3-4965-b608-c24c178462d8"
       }
-    }
+    },
+    "owner": "sreyasrinidhi"
   }
 }

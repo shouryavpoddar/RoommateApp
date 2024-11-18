@@ -1,9 +1,9 @@
-import CalendarWidget from "@/PageElements/CalenderPage/Components/CalendarWidget";
-import Tasks from "@/PageElements/CalenderPage/Components/Tasks";
+import CalendarWidget from "@/PageElements/CalendarPage/Components/CalendarWidget";
+import Tasks from "@/PageElements/CalendarPage/Components/Tasks";
 import {useState} from "react";
-import Layout from "@/PageElements/CalenderPage/PageLayout";
-import CalenderEventModal from "@/PageElements/CalenderPage/Components/CalendarEventModal";
-import AddEventModal from "@/PageElements/CalenderPage/Components/AddEventModal";
+import Layout from "@/PageElements/CalendarPage/PageLayout";
+import CalendarEventModal from "@/PageElements/CalendarPage/Components/CalendarEventModal";
+import AddEventModal from "@/PageElements/CalendarPage/Components/AddEventModal";
 import {useNavigation, useRouter} from "expo-router";
 
 
@@ -34,7 +34,7 @@ const CalendarPage = () => {
             </Layout.ScrollSection>
 
             <Layout.ExpandEventModal>
-                <CalenderEventModal/>
+                <CalendarEventModal/>
             </Layout.ExpandEventModal>
 
             <Layout.AddEventModal navigation={navigation}>

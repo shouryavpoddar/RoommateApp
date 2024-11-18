@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { editTask, deleteTask } from "@/StateManagement/Slices/CalendarSlice";
 import { CalendarContext } from '../../Context';
 
-const CalenderEventModal = () => {
+const CalendarEventModal = () => {
     const { selectedTask: task, selectedDate, setSelectedTask: setTask } = useContext(CalendarContext);
     const dispatch = useDispatch();
 
@@ -122,4 +122,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default CalenderEventModal;
+export default CalendarEventModal;

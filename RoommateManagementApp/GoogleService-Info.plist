@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>544040214770-n2knhqkf502cj3jhb249lnf3436gultp.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.544040214770-n2knhqkf502cj3jhb249lnf3436gultp</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>544040214770-5ummbukt68m6vu9jrain3t0nm2jgft01.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBxjGWA6Rl1sZrB1nLBEyRrb_O9WSdBmUY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>544040214770</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.roomateapp.in</string>
+	<key>PROJECT_ID</key>
+	<string>roomateapp-9ded3</string>
+	<key>STORAGE_BUCKET</key>
+	<string>roomateapp-9ded3.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:544040214770:ios:5e2017419a68b7d016f06b</string>
+</dict>
+</plist>
