@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, Animated, StyleSheet } from 'react-native';
 import { useDispatch } from "react-redux";
-import {Redirect, router} from "expo-router";
-import {useNavigation} from "expo-router";
-import {setId} from "@/StateManagement/Slices/UserSlice";
-import auth from "react-native-firebase/auth";
+import { Redirect, router } from "expo-router";
+import { useNavigation } from "expo-router";
+import { setId } from "@/StateManagement/Slices/UserSlice";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase.config";
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false); // Added loading state here
     const [scale] = useState(new Animated.Value(1)); // Animation for button press
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -22,14 +24,16 @@ const LoginPage = () => {
     };
 
     const handleAuth = async () => {
-        setLoading(true);
+        setLoading(true); // Set loading to true when authentication starts
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            console.log(auth);
+            const userCredential = await signInWithEmailAndPassword(auth, username, password);
             dispatch(setId(userCredential.user.uid));
+            router.navigate("/");
         } catch (e) {
             Alert.alert('Sign in failed', e.message);
         } finally {
-            setLoading(false);
+            setLoading(false); // Reset loading to false when authentication completes
         }
     };
 
@@ -42,13 +46,9 @@ const LoginPage = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>
-                Welcome to Roommate App
-            </Text>
+            <Text style={styles.title}>Welcome to Roommate App</Text>
 
-            <Text style={styles.label}>
-                Username
-            </Text>
+            <Text style={styles.label}>Username</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Enter your username"
@@ -57,9 +57,7 @@ const LoginPage = () => {
                 autoCapitalize="none"
             />
 
-            <Text style={styles.label}>
-                Password
-            </Text>
+            <Text style={styles.label}>Password</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Enter your password"
@@ -76,13 +74,15 @@ const LoginPage = () => {
                     }}
                     style={styles.button}
                 >
-                    <Text style={styles.buttonText}>
-                        Login
-                    </Text>
+                    {loading ? (
+                        <Text style={styles.buttonText}>Loading...</Text> // Show loading indicator
+                    ) : (
+                        <Text style={styles.buttonText}>Login</Text>
+                    )}
                 </TouchableOpacity>
             </Animated.View>
 
-            <TouchableOpacity onPress={() => {navigation.navigate('sign-in')}}>
+            <TouchableOpacity onPress={() => navigation.navigate('sign-in')}>
                 <Text style={styles.signUpText}>Click here to Sign Up</Text>
             </TouchableOpacity>
         </View>
@@ -98,57 +98,57 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     title: {
-        fontSize: 32, // text-4xl
+        fontSize: 32,
         textAlign: 'center',
-        fontWeight: 'bold', // font-bold
-        marginBottom: 48, // mb-12
-        color: '#4A154B', // Purple
-        letterSpacing: 2, // tracking-wider
+        fontWeight: 'bold',
+        marginBottom: 48,
+        color: '#4A154B',
+        letterSpacing: 2,
     },
     label: {
-        fontSize: 18, // text-lg
-        fontWeight: '600', // font-semibold
-        color: '#4A154B', // Purple
-        marginBottom: 8, // mb-1
-        alignSelf: 'flex-start', // self-start
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#4A154B',
+        marginBottom: 8,
+        alignSelf: 'flex-start',
     },
     input: {
         width: '100%',
-        height: 48, // h-12
+        height: 48,
         borderWidth: 1,
-        borderColor: '#4A154B', // Purple
-        borderRadius: 24, // rounded-full
-        paddingHorizontal: 16, // px-4
-        marginBottom: 20, // mb-5
-        backgroundColor: '#EDEFF7', // Light gray
-        shadowColor: '#000', // Shadow for input
+        borderColor: '#4A154B',
+        borderRadius: 24,
+        paddingHorizontal: 16,
+        marginBottom: 20,
+        backgroundColor: '#EDEFF7',
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
     },
     buttonContainer: {
         width: '100%',
-        marginBottom: 16, // mb-4
+        marginBottom: 16,
     },
     button: {
-        backgroundColor: '#2BAC76', // Green
-        paddingVertical: 16, // py-4
-        borderRadius: 24, // rounded-full
+        backgroundColor: '#2BAC76',
+        paddingVertical: 16,
+        borderRadius: 24,
         alignItems: 'center',
-        shadowColor: '#000', // Shadow for button
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 4,
     },
     buttonText: {
-        color: '#4A154B', // Purple
-        fontSize: 18, // text-lg
-        fontWeight: 'bold', // font-bold
-        letterSpacing: 1, // tracking-wide
+        color: '#4A154B',
+        fontSize: 18,
+        fontWeight: 'bold',
+        letterSpacing: 1,
     },
     signUpText: {
-        color: '#4A154B', // Purple
-        fontSize: 14, // text-sm
+        color: '#4A154B',
+        fontSize: 14,
         marginTop: 10,
     },
 });

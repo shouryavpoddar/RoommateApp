@@ -1,42 +1,42 @@
 import { Redirect, Stack } from "expo-router";
 import { useSelector } from "react-redux";
-import auth from "@react-native-firebase/auth"; 
+import { auth } from "../../firebase.config"; // Ensure this is correct
 import { useState, useEffect } from "react";
-import { View } from "react-native";
-import { ActivityIndicator } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 
 export default function RootLayout() {
   const id = useSelector((state) => state.user.id);
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState(null);
 
-  const onAuthStateChanged = (user) => {
-    console.log("onAuthStateChanged", user);
-    setUser(user);
+  const onAuthStateChanged = (currentUser) => {
+    console.log("onAuthStateChanged", currentUser);
+    setUser(currentUser);
     if (initializing) setInitializing(false);
   };
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged); 
-    return subscriber;
-  }, [initializing]); 
+    const unsubscribe = auth.onAuthStateChanged(onAuthStateChanged);
+    return () => unsubscribe();
+  }, []);
 
-  if (!id) {
-    // If the user is not authenticated, redirect to the login page
+  if (!user && !initializing) {
     return <Redirect href="/log-in" />;
   }
 
-  if (initializing)
+  if (initializing) {
     return (
-        <View
-            style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                flex: 1,
-            }}>
-            <ActivityIndicator size="large" />
-        </View>
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          flex: 1,
+        }}
+      >
+        <ActivityIndicator size="large" />
+      </View>
     );
+  }
 
   return (
     <Stack>

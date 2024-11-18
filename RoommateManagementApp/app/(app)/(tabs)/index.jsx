@@ -4,8 +4,25 @@ import FeatureTile from "@/PageElements/HomePage/Components/FeatureTile";
 import Updates from "@/PageElements/HomePage/Components/RecentUpdates";
 import CalendarWidget from "@/PageElements/CalendarPage/Components/CalendarWidget/homeWidget";
 import {router} from "expo-router";
+import {auth} from "../../../firebase.config";
 
 export default function HomePage() {
+
+    // const [loading, setLoading] = useState(false);
+
+    const handleLogout = async () => {
+        // setLoading(true); // Set loading to true when logout starts
+        try {
+            await auth.signOut(); // Sign out the current user
+            dispatch(setId(null)); // Clear user ID in Redux state
+            router.navigate("/log-in"); // Navigate to login page
+        } catch (e) {
+            // Alert.alert('Logout failed', e.message);
+        }
+        // } finally {
+        //     setLoading(false); // Reset loading to false when logout completes
+        // }
+    };
 
     return (
         <View style={styles.container}>
@@ -32,8 +49,8 @@ export default function HomePage() {
                     <FeatureTile
                         flex={1}
                         bgColor="#FF5733" // red
-                        text="Tall Tile 2"
-                        onPress={() => console.log('Change me to navigation to go to a page!')}
+                        text="Logout"
+                        onPress={() => {handleLogout()}}
                     />
                 </View>
 
