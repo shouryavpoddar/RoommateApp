@@ -47,7 +47,8 @@
             "useFrameworks": "static"
           }
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true
