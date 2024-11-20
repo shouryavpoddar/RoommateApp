@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, Image, StyleSheet } from 'react-native';
 
 export default function ChatScreen() {
     const [message, setMessage] = useState('');
@@ -27,51 +27,132 @@ export default function ChatScreen() {
                 isSender: true,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
-            setChatHistory([...chatHistory, newMessage]);  // Adds message to the end of the array
+            setChatHistory([...chatHistory, newMessage]); // Adds message to the end of the array
             setMessage('');
         }
     };
 
     return (
-        <View className="flex-1 bg-[#4B225F]" testID='chat-main-page'>
+        <View style={styles.container} testID='chat-main-page'>
             {/* Chat Messages */}
             <FlatList
                 data={chatHistory}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <View className={`flex-row items-end mb-3 ${item.isSender ? 'justify-end' : ''}`}>
+                    <View style={[styles.messageRow, item.isSender && styles.messageRowSender]}>
                         {!item.isSender && (
                             <Image
-                                className="w-10 h-10 rounded-full mr-2"
+                                style={styles.avatar}
                                 source={{ uri: item.avatar }}
                             />
                         )}
-                        <View className={`max-w-3/4 p-3 rounded-lg ${item.isSender ? 'bg-[#8CC49F]' : 'bg-gray-200'}`}>
-                            <Text className={`${item.isSender ? 'text-white' : 'text-black'}`}>{item.text}</Text>
-                            <Text className={`text-xs mt-1 ${item.isSender ? 'text-gray-200' : 'text-gray-500'}`}>
+                        <View style={[styles.messageBubble, item.isSender ? styles.senderBubble : styles.receiverBubble]}>
+                            <Text style={item.isSender ? styles.senderText : styles.receiverText}>
+                                {item.text}
+                            </Text>
+                            <Text style={[styles.timestamp, item.isSender ? styles.senderTimestamp : styles.receiverTimestamp]}>
                                 {item.timestamp}
                             </Text>
                         </View>
                     </View>
                 )}
-                contentContainerStyle={{ paddingBottom: 20, paddingTop: 40 }} // Add paddingTop for more space from the top
+                contentContainerStyle={styles.chatContainer}
             />
 
-
             {/* Message Input */}
-            <View className="flex-row items-center px-4 py-2 bg-[#8A7191] mx-4 mb-4 rounded-full">
+            <View style={styles.inputContainer}>
                 <TextInput
-                    className="flex-1 h-10 px-4 text-white bg-transparent rounded-full"
+                    style={styles.textInput}
                     placeholder="Type a message..."
                     placeholderTextColor="#FFFFFF"
                     value={message}
                     onChangeText={setMessage}
-                    style={{ color: 'white' }}
                 />
-                <TouchableOpacity className="ml-2 px-4 py-2 bg-[#4B225F] rounded-full" onPress={handleSend}>
-                    <Text className="text-white font-bold">Send</Text>
+                <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
+                    <Text style={styles.sendButtonText}>Send</Text>
                 </TouchableOpacity>
             </View>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#4B225F', // Equivalent to 'bg-[#4B225F]'
+    },
+    chatContainer: {
+        paddingBottom: 20,
+        paddingTop: 40, // Add paddingTop for more space from the top
+    },
+    messageRow: {
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        marginBottom: 12, // Equivalent to 'mb-3'
+    },
+    messageRowSender: {
+        justifyContent: 'flex-end',
+    },
+    avatar: {
+        width: 40, // Equivalent to 'w-10'
+        height: 40, // Equivalent to 'h-10'
+        borderRadius: 20, // Equivalent to 'rounded-full'
+        marginRight: 8, // Equivalent to 'mr-2'
+    },
+    messageBubble: {
+        maxWidth: '75%', // Equivalent to 'max-w-3/4'
+        padding: 12, // Equivalent to 'p-3'
+        borderRadius: 8, // Equivalent to 'rounded-lg'
+    },
+    senderBubble: {
+        backgroundColor: '#8CC49F', // Equivalent to 'bg-[#8CC49F]'
+    },
+    receiverBubble: {
+        backgroundColor: '#E5E7EB', // Equivalent to 'bg-gray-200'
+    },
+    senderText: {
+        color: '#FFFFFF', // Equivalent to 'text-white'
+    },
+    receiverText: {
+        color: '#000000', // Equivalent to 'text-black'
+    },
+    timestamp: {
+        fontSize: 10, // Equivalent to 'text-xs'
+        marginTop: 4, // Equivalent to 'mt-1'
+    },
+    senderTimestamp: {
+        color: '#D1D5DB', // Equivalent to 'text-gray-200'
+    },
+    receiverTimestamp: {
+        color: '#6B7280', // Equivalent to 'text-gray-500'
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 16, // Equivalent to 'px-4'
+        paddingVertical: 8, // Equivalent to 'py-2'
+        backgroundColor: '#8A7191', // Equivalent to 'bg-[#8A7191]'
+        marginHorizontal: 16, // Equivalent to 'mx-4'
+        marginBottom: 16, // Equivalent to 'mb-4'
+        borderRadius: 999, // Equivalent to 'rounded-full'
+    },
+    textInput: {
+        flex: 1,
+        height: 40, // Equivalent to 'h-10'
+        paddingHorizontal: 16, // Equivalent to 'px-4'
+        color: '#FFFFFF', // White text color
+        backgroundColor: 'transparent',
+        borderRadius: 999, // Rounded input field
+    },
+    sendButton: {
+        marginLeft: 8, // Equivalent to 'ml-2'
+        paddingHorizontal: 16, // Equivalent to 'px-4'
+        paddingVertical: 8, // Equivalent to 'py-2'
+        backgroundColor: '#4B225F', // Equivalent to 'bg-[#4B225F]'
+        borderRadius: 999, // Equivalent to 'rounded-full'
+    },
+    sendButtonText: {
+        color: '#FFFFFF', // Equivalent to 'text-white'
+        fontWeight: 'bold', // Equivalent to 'font-bold'
+    },
+});

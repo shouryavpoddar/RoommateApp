@@ -58,25 +58,25 @@ const AddEventModal = () => {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        padding: 16, // Add some padding to the modal content
+        padding: 16, // Equivalent to 'p-4'
     },
     heading: {
-        fontSize: 24, // text-xl
-        fontWeight: 'bold', // font-bold
-        marginBottom: 16, // mb-4
+        fontSize: 24, // Equivalent to 'text-xl'
+        fontWeight: 'bold', // Equivalent to 'font-bold'
+        marginBottom: 16, // Equivalent to 'mb-4'
     },
     label: {
-        fontSize: 16, // text-base
-        fontWeight: '600', // font-semibold
-        color: '#4A154B', // Purple color
-        marginBottom: 8, // mb-2
+        fontSize: 16, // Equivalent to 'text-base'
+        fontWeight: '600', // Equivalent to 'font-semibold'
+        color: '#4A154B', // Custom color (purple shade)
+        marginBottom: 8, // Equivalent to 'mb-2'
     },
     input: {
-        borderWidth: 1, // border
-        borderColor: '#D1D5DB', // gray-300
-        padding: 8, // p-2
-        marginBottom: 16, // mb-4
-        borderRadius: 4, // rounded corners
+        borderWidth: 1, // Equivalent to 'border'
+        borderColor: '#D1D5DB', // Equivalent to 'border-gray-300'
+        padding: 8, // Equivalent to 'p-2'
+        marginBottom: 16, // Equivalent to 'mb-4'
+        borderRadius: 4, // Equivalent to 'rounded'
         width: '100%',
     },
 });
