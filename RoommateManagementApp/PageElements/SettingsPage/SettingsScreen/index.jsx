@@ -15,6 +15,8 @@ import PasswordModal from '@/PageElements/SettingsPage/Components/PasswordModal'
 import TermsOfServiceModal from '@/PageElements/SettingsPage/Components/TermsOfServiceModal';
 import PrivacyPolicyModal from '@/PageElements/SettingsPage/Components/PrivacyPolicyModal';
 import { SettingsContext, SettingsProvider } from '@/PageElements/SettingsPage/Context';
+import {router} from "expo-router";
+import {auth} from "../../../firebase.config";
 
 export function SettingsScreenContent() {
     const [isNotificationsEnabled, setNotificationsEnabled] = useState(true);
@@ -24,15 +26,35 @@ export function SettingsScreenContent() {
     const [isTermsModalVisible, setIsTermsModalVisible] = useState(false);
     const [isPrivacyModalVisible, setIsPrivacyModalVisible] = useState(false);
 
+    // const [loading, setLoading] = useState(false);
+
+    const logoutUser = async () => {
+        // setLoading(true); // Set loading to true when logout starts
+        try {
+            await auth.signOut(); // Sign out the current user
+            dispatch(logout()); // Clear user ID in Redux state
+            router.navigate("/log-in"); // Navigate to login page
+        } catch (e) {
+            // Alert.alert('Logout failed', e.message);
+        }
+        // } finally {
+        //     setLoading(false); // Reset loading to false when logout completes
+        // }
+    };
+
     const handleLogout = () => {
+        //for now while working on web browser and can't see alert, making it log out automatically without asking - TODO fix
         Alert.alert(
             "Log Out",
             "Are you sure you want to log out?",
             [
                 { text: "Cancel", style: "cancel" },
-                { text: "Log Out", onPress: () => dispatch(logout()) }
+                { text: "Log Out", onPress: () => logoutUser() }
             ]
         );
+
+        //TEMP - REMOVE THIS WHEN MOBILE APP WORKING
+        logoutUser()
     };
 
     return (
