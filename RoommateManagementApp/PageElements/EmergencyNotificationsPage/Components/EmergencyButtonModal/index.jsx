@@ -1,5 +1,5 @@
 import { useEffect, useContext, useState } from 'react'    
-import { Text, TextInput, Button, Modal, TouchableWithoutFeedback, View, Alert, Pressable } from 'react-native';
+import { StyleSheet, Text, TextInput, Button, Modal, TouchableWithoutFeedback, View, Alert, Pressable } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { editEmergencyButton, deleteEmergencyButton } from '@/StateManagement/Slices/EmergencyButtonSlice';
 import { EmergencyContext } from '../../Context';
@@ -58,92 +58,79 @@ export default function EmergencyButtonModal() {
     }
 
     return (
-        // visible={!!selectedButton}  makes this only visible when there is a selected button
+        // visible={!!selectedButton} makes this only visible when there is a selected button
         <Modal
             animationType="fade"
             transparent={true}
-            visible={!!selectedButton}  
+            visible={!!selectedButton}
             onRequestClose={closeModal}
         >
             <TouchableWithoutFeedback onPress={closeModal}>
-                <View className="flex-1 justify-center items-center bg-black/50">
+                <View style={styles.modalBackground}>
                     <TouchableWithoutFeedback>
-                        <View className="w-72 p-6 bg-[#EDEFF7] rounded-xl items-center">
-                            
+                        <View style={styles.modalContainer}>
+                            {isEditing ? (
+                                <>
+                                    <Text style={styles.title}>Edit Emergency Button</Text>
 
-                        {isEditing ? (
-                            <>
-                                <Text className="text-xl font-bold mb-4">Edit Emergency Button</Text>
+                                    <Text style={styles.label}>Title</Text>
+                                    <TextInput
+                                        value={editedTitle}
+                                        placeholder='Enter title here'
+                                        onChangeText={setEditedTitle}
+                                        style={styles.input}
+                                    />
+                                    
+                                    <Text style={styles.label}>Message</Text>
+                                    <TextInput
+                                        value={editedMessage}
+                                        placeholder='Enter message here'
+                                        onChangeText={setEditedMessage}
+                                        style={styles.input}
+                                    />
 
-                                <Text className="text-base text-[#4A154B] text-left font-semibold mb-2 w-full">Title</Text>
-                                <TextInput
-                                    value={editedTitle}
-                                    placeholder='Enter title here'
-                                    onChangeText={setEditedTitle}
-                                    className="border border-gray-300 p-2 mb-4 w-full"
-                                />
-                                
-                                <Text className="text-base text-[#4A154B] text-left font-semibold mb-2 w-full">Message</Text>
-                                <TextInput
-                                    value={editedMessage}
-                                    placeholder='Enter message here'
-                                    onChangeText={setEditedMessage}
-                                    className="border border-gray-300 p-2 mb-4 w-full"
-                                />
+                                    <Text style={styles.label}>Background Color</Text>
+                                    <TextInput
+                                        value={editedBgColor}
+                                        placeholder='Enter color here'
+                                        onChangeText={setEditedBgColor}
+                                        style={styles.input}
+                                    />
+                                    <Pressable style={styles.saveButton} onPress={handleEdit}>
+                                        <Text style={styles.buttonText}>Save</Text>
+                                    </Pressable>
+                                    <Pressable style={styles.cancelButton} onPress={() => setIsEditing(false)}>
+                                        <Text style={styles.buttonText}>Cancel</Text>
+                                    </Pressable>
+                                </>
+                            ) : (
+                                <>
+                                    <Text style={styles.selectedTitle}>{selectedButton.title}</Text>
+                                    <Text style={styles.selectedMessage}>{`Notification Message: \n${selectedButton.message}`}</Text>
+                                    <Pressable style={styles.notificationButton} onPress={handleNotification}>
+                                        <Text style={styles.buttonText}>Send Emergency Notification</Text>
+                                    </Pressable>
 
-                                <Text className="text-base text-[#4A154B] text-left font-semibold mb-2 w-full">Background Color</Text>
-                                <TextInput
-                                    value={editedBgColor}
-                                    placeholder='Enter color here'
-                                    onChangeText={setEditedBgColor}
-                                    className="border border-gray-300 p-2 mb-4 w-full"
-                                />
-                                <Pressable
-                                    className="bg-[#8CC49F] rounded-md p-4 mb-3 w-full"
-                                    onPress={handleEdit}
-                                >
-                                    <Text className="text-white font-bold text-center">Save</Text>
-                                </Pressable>
-                                <Pressable
-                                    className="bg-[#8CC49F] rounded-md p-4 mb-3 w-full"
-                                    onPress={() => setIsEditing(false)}
-                                >
-                                    <Text className="text-white font-bold text-center">Cancel</Text>
-                                </Pressable>
-                            </>
-                        ) : (
-                            <>
-                                <Text className="text-[#4A154B] text-xl font-bold mb-2">{selectedButton.title}</Text>
-                                <Text className="text-[#4A154B] mb-4 text-center">{`Notification Message: \n${selectedButton.message}`}</Text>
-                                <Pressable
-                                    className="bg-[#8A7191] rounded-md p-4 mb-3 w-full"
-                                    onPress={handleNotification}
-                                >
-                                    <Text className="text-white font-bold text-center">Send Emergency Notification</Text>
-                                </Pressable>
+                                    {/* Only render edit and delete buttons if the button isn't marked as permanent */}
+                                    {!selectedButton.isPermanent ? (
+                                        <>
+                                            <Pressable
+                                                onPress={() => setIsEditing(true)}
+                                                style={styles.editButton}
+                                            >
+                                                <Text style={styles.buttonText}>Edit</Text>
+                                            </Pressable>
 
-                                {/*only render edit and delete buttons if button isn/t marked as permanent*/}
-                                {!selectedButton.isPermanent ? (
-                                    <>
-                                        <Pressable
-                                            onPress={() => setIsEditing(true)}
-                                            className="bg-[#8CC49F] rounded-md p-4 mb-3 w-full"
-                                        >
-                                            <Text className="text-white font-bold text-center">Edit</Text>
-                                        </Pressable>
-
-                                        <Pressable
-                                            onPress={handleDelete}
-                                            className="bg-red-500 rounded-md p-4 mb-3 w-full"
-                                        >
-                                            <Text className="text-white font-bold text-center">Delete</Text>
-                                        </Pressable>
-                                    </>
-                                ) : null }
-                            </>
-                        )}
-
-
+                                            <Pressable
+                                                onPress={handleDelete}
+                                                style={styles.deleteButton}
+                                            >
+                                                <Text style={styles.buttonText}>Delete</Text>
+                                            </Pressable>
+                                        </>
+                                    ) : null}
+                                </>
+                            )}
                         </View>
                     </TouchableWithoutFeedback>
                 </View>
@@ -151,3 +138,90 @@ export default function EmergencyButtonModal() {
         </Modal>
     );
 }
+
+const styles = StyleSheet.create({
+    modalBackground: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Equivalent to bg-black/50
+    },
+    modalContainer: {
+        width: 288, // Equivalent to w-72
+        padding: 24, // Equivalent to p-6
+        backgroundColor: '#EDEFF7',
+        borderRadius: 16, // Equivalent to rounded-xl
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 16, // Equivalent to mb-4
+    },
+    label: {
+        fontSize: 14,
+        color: '#4A154B',
+        textAlign: 'left',
+        fontWeight: '600',
+        marginBottom: 8, // Equivalent to mb-2
+        width: '100%',
+    },
+    input: {
+        width: '100%',
+        borderWidth: 1,
+        borderColor: '#D1D5DB', // Equivalent to border-gray-300
+        padding: 8, // Equivalent to p-2
+        marginBottom: 16, // Equivalent to mb-4
+    },
+    saveButton: {
+        backgroundColor: '#8CC49F',
+        borderRadius: 8,
+        padding: 16,
+        marginBottom: 12, // Equivalent to mb-3
+        width: '100%',
+    },
+    cancelButton: {
+        backgroundColor: '#8CC49F',
+        borderRadius: 8,
+        padding: 16,
+        marginBottom: 12, // Equivalent to mb-3
+        width: '100%',
+    },
+    notificationButton: {
+        backgroundColor: '#8A7191',
+        borderRadius: 8,
+        padding: 16,
+        marginBottom: 12, // Equivalent to mb-3
+        width: '100%',
+    },
+    editButton: {
+        backgroundColor: '#8CC49F',
+        borderRadius: 8,
+        padding: 16,
+        marginBottom: 12, // Equivalent to mb-3
+        width: '100%',
+    },
+    deleteButton: {
+        backgroundColor: '#F87171', // Equivalent to bg-red-500
+        borderRadius: 8,
+        padding: 16,
+        marginBottom: 12, // Equivalent to mb-3
+        width: '100%',
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    selectedTitle: {
+        color: '#4A154B',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 8, // Equivalent to mb-2
+    },
+    selectedMessage: {
+        color: '#4A154B',
+        textAlign: 'center',
+        marginBottom: 16, // Equivalent to mb-4
+    },
+});

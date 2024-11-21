@@ -4,8 +4,8 @@ import uuid from "react-native-uuid";
 // initial state with prefab butons
 const initialState = {
     buttons: {
-        1 : {id: 1, title : 'Predefined Emergency', message: 'Predefined Emergency Message', bgColor: 'bg-red-500'},
-        2 : {id: 2, title: 'Test Emergency', message: 'Test emergency message', bgColor: 'bg-green-500'},
+        1 : {id: 1, title : 'Predefined Emergency', message: 'Predefined Emergency Message', bgColor: '#FF5733', isPermanent: true},
+        2 : {id: 2, title: 'Test Emergency', message: 'Test emergency message', bgColor: '#28A745', isPermanent: false},
     }
 };
 
