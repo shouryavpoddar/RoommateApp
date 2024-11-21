@@ -3,6 +3,7 @@ import { View, ScrollView, StyleSheet } from 'react-native';
 import FeatureTile from "@/PageElements/HomePage/Components/FeatureTile";
 import Updates from "@/PageElements/HomePage/Components/RecentUpdates";
 import CalendarWidget from "@/PageElements/CalendarPage/Components/CalendarWidget/homeWidget";
+import EmergencyHomeWidget from '@/PageElements/EmergencyNotificationsPage/Components/EmergencyHomeWidget';
 import {router} from "expo-router";
 
 export default function HomePage() {
@@ -27,7 +28,8 @@ export default function HomePage() {
                         flex={1}
                         bgColor="#28A745" // green
                         text="Tall Tile 1"
-                        onPress={() => console.log('Change me to navigation to go to a page!')}
+                        TileComponent={EmergencyHomeWidget}
+                        onPress={() => {router.navigate('EmergencyNotifications')}}
                     />
                     <FeatureTile
                         flex={1}
