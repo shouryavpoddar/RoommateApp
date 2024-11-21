@@ -1,7 +1,7 @@
 import {Calendar} from "react-native-calendars";
 import React from "react";
 import {useSelector} from "react-redux";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 
 
 const CalendarWidget = ()=>{
@@ -28,11 +28,11 @@ const CalendarWidget = ()=>{
         return marked;
     };
 
-    return(
+    return (
         //Disable touch events for the calendar
-        <View className="w-full overflow-hidden rounded-md" pointerEvents="none">  
+        <View style={styles.container}>
             <Calendar
-                style={{ backgroundColor: '#EDEFF7'}}
+                style={styles.calendar}
                 theme={{
                     calendarBackground: '#EDEFF7',
                     textSectionTitleColor: '#2BAC76',
@@ -51,7 +51,21 @@ const CalendarWidget = ()=>{
                 hideArrows={true}
             />
         </View>
-    )
-}
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1, // Allow the container to fill the available space
+        width: "100%",
+        backgroundColor: '#000',
+        overflow: 'hidden', // Ensure it doesn't overflow
+        borderRadius: 8, // Match the rounding of the tile
+    },
+    calendar: {
+        flex: 1, // Make the calendar fill the available space
+        backgroundColor: '#EDEFF7',
+    },
+});
 
 export default CalendarWidget;

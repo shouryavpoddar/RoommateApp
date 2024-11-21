@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         width: "100%",
         padding: 12, // p-3
         alignItems: "center",
-        borderRadius: 12, // rounded-lg
+        flex: 1
     },
     buttonText: {
         color: "#FFF", // text-white

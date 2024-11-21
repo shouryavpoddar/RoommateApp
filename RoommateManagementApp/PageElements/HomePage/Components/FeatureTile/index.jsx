@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center', // justify-center
         alignItems: 'center', // items-center
         marginHorizontal: 6, // mx-1.5
+        overflow: 'hidden',
     },
     defaultHeight: {
         height: 192, // h-48 (48 * 4 = 192 in px)
