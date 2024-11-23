@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6b4ae8f6-2241-453b-9437-feabb8f02d5f" name="Changes" comment="Created Tabs">
-      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/CalendarPage/Components/AddEventModal/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/CalendarPage/Components/AddEventModal/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/ChatScreen/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/ChatScreen/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/Components/AvatarComponent/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/Components/AvatarComponent/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/Components/ChatBubble/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/Components/ChatBubble/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/Components/MessageInput/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/Components/MessageInput/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +67,7 @@
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "dev-client-app",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Sreya/Case_Western/SoftwareEngineering/RoommateApp",
+    "last_opened_file_path": "C:/Projects/RoommateApp",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
