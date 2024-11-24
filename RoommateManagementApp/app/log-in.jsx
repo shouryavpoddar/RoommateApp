@@ -82,7 +82,7 @@ const LoginPage = () => {
                 </TouchableOpacity>
             </Animated.View>
 
-            <TouchableOpacity onPress={() => navigation.navigate('sign-in')}>
+            <TouchableOpacity onPress={() => navigation.navigate('sign-up')}>
                 <Text style={styles.signUpText}>Click here to Sign Up</Text>
             </TouchableOpacity>
         </View>
