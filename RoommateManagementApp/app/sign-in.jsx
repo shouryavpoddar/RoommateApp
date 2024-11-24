@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, Animated, StyleSheet } from 'react-native';
 import { useDispatch } from "react-redux";
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router"; // Use `router` for navigation
 import { setId } from "@/StateManagement/Slices/UserSlice";
-import { auth } from "../firebase.config";
-import { createUserWithEmailAndPassword} from "firebase/auth"; // Import createUserWithEmailAndPassword
+import { auth, db } from "../firebase.config";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from 'firebase/firestore';
 
 const SignUpPage = () => {
     const [username, setUsername] = useState('');
@@ -27,21 +28,27 @@ const SignUpPage = () => {
     };
     
     const executeSignUp = async () => {
-        // setLoading(true); // Set loading state when signing up
         try {
-            console.log(auth); // Debugging purpose
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password); // Use email and password
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             console.log("User signed up:", userCredential.user);
-            // dispatch(setId(userCredential.user.uid)); // Save user ID to Redux store
+            
+            // Save user ID to Redux store
+            dispatch(setId(userCredential.user.uid));
+            
+            // Store user data in Firestore
+            const userEmail = userCredential.user.email;
+            const myUserID = userCredential.user.uid;
+            await setDoc(doc(db, "users", `${myUserID}`), {
+                email: userEmail,
+                username: username, // Use state variable for username
+            });
+
             Alert.alert('Success', 'Your account has been created successfully!');
-            router.navigate("/log-in"); // Redirect to the login page
+            router.push("/log-in"); // Navigate to login page
         } catch (error) {
             console.error("Sign up failed:", error.message);
             Alert.alert('Sign up failed', error.message);
         }
-        // } finally {
-        //     setLoading(false); // Reset loading state
-        // }
     };
 
     const animateButton = () => {
@@ -104,7 +111,7 @@ const SignUpPage = () => {
                 </TouchableOpacity>
             </Animated.View>
 
-            <TouchableOpacity onPress={() => navigation.navigate('log-in')}>
+            <TouchableOpacity onPress={() => router.push("/log-in")}>
                 <Text style={styles.switchText}>Already have an account? Log in</Text>
             </TouchableOpacity>
         </View>
