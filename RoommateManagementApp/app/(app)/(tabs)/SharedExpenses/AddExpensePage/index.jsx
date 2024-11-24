@@ -1,9 +1,8 @@
 import { View, Text } from "react-native";
+import AddExpenseScreen from "@/PageElements/ExpensesPage/Pages/AddExpensePage";
 
-export default function Page1() {
+export default function AddExpensePage() {
     return (
-        <View>
-            <Text>Page1</Text>
-        </View>
+        <AddExpenseScreen />
     );
 }

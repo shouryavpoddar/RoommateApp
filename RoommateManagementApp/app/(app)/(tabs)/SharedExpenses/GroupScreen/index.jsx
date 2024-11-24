@@ -1,9 +1,13 @@
 import { View, Text } from "react-native";
+import GroupPage from "@/PageElements/ExpensesPage/Pages/GroupExpenses";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
-export default function Page2() {
+export default function GroupScreen() {
+    // const router = useRouter();
+    // const { name, friendId } = router.query;
+    const { name, friendId } = useLocalSearchParams();
+
     return (
-        <View>
-            <Text>Page2</Text>
-        </View>
+        <GroupPage name={name} friendId={friendId}/>
     );
 }

@@ -22,7 +22,7 @@ const FriendsScreen = () => {
             parentNavigation.setOptions({
                 headerRight: () => (
                     <TouchableOpacity
-                        onPress={() => router.push("AddExpensePage")}
+                        onPress={() => router.push("SharedExpenses/AddExpensePage")}
                         style={styles.headerButton}
                         testID='add-expense-button'
                     >
@@ -61,7 +61,12 @@ const FriendsScreen = () => {
     });
 
     const handlePress = (item) => {
-        router.push('GroupScreen', { name: item.name, friendId: item.id });
+        //router.push('SharedExpenses/GroupScreen', { name: item.name, friendId: item.id });
+        console.log(`Pressed with name: ${item.name}, id: ${item.id}`);
+        router.push({
+        pathname: '/SharedExpenses/GroupScreen',
+        params: { name: item.name, friendId: item.id },
+        });
     };
 
     return (

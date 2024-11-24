@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { settleExpense } from '"@/StateManagement/Slices/ExpensesSlice"';
+import { settleExpense } from '@/StateManagement/Slices/ExpensesSlice';
 import Layout from './PageLayout';
 import BalanceHeader from './PageLayout/Components/BalanceHeader';
 import ExpenseItem from './PageLayout/Components/ExpenseItem';
 import SettleExpenseModalContent from './PageLayout/Components/SettleExpenseModalContent';
 
-const GroupScreen = ({ route }) => {
-    const { name, friendId } = route.params;
+const GroupPage = ( { name, friendId }) => {
     const dispatch = useDispatch();
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedExpense, setSelectedExpense] = useState(null);
@@ -52,4 +51,4 @@ const GroupScreen = ({ route }) => {
     );
 };
 
-export default GroupScreen;
+export default GroupPage;
