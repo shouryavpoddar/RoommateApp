@@ -4,9 +4,10 @@ import FeatureTile from "@/PageElements/HomePage/Components/FeatureTile";
 import Updates from "@/PageElements/HomePage/Components/RecentUpdates";
 import CalendarWidget from "@/PageElements/CalendarPage/Components/CalendarWidget/homeWidget";
 import EmergencyHomeWidget from '@/PageElements/EmergencyNotificationsPage/Components/EmergencyHomeWidget';
-import {router} from "expo-router";
+import {useRouter} from "expo-router";
 
 export default function HomePage() {
+    const router = useRouter();
 
     return (
         <View style={styles.container}>
@@ -34,8 +35,8 @@ export default function HomePage() {
                     <FeatureTile
                         flex={1}
                         bgColor="#FF5733" // red
-                        text="Tttest Tile 2"
-                        onPress={() => {router.navigate('StackedTabs')}}
+                        text="Shared Expenses"
+                        onPress={() => {router.navigate('SharedExpenses')}}
                     />
                 </View>
 

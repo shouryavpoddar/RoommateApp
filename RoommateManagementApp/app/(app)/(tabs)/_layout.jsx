@@ -9,7 +9,7 @@ export default function TabLayout() {
                 <Tabs.Screen name="Calendar/index" options={{ title: 'Calendar' }} />
                 <Tabs.Screen name="Chat/index" options={{ title: 'Chat' }} />
                 <Tabs.Screen name="EmergencyNotifications/index" options={{ title: 'Emergency Notifications' }} />
-                <Tabs.Screen name="StackedTabs" options={{ title: 'Test Stacked Tabs' }} />
+                <Tabs.Screen name="SharedExpenses" options={{ title: 'Shared Expenses' }} />
             </Tabs>
         </>
     );
