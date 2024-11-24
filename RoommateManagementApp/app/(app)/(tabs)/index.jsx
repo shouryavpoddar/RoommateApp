@@ -34,8 +34,8 @@ export default function HomePage() {
                     <FeatureTile
                         flex={1}
                         bgColor="#FF5733" // red
-                        text="Tall Tile 2"
-                        onPress={() => console.log('Change me to navigation to go to a page!')}
+                        text="Tttest Tile 2"
+                        onPress={() => {router.navigate('StackedTabs')}}
                     />
                 </View>
 
