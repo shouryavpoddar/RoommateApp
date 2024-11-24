@@ -3,21 +3,7 @@ import calendarReducer from './Slices/CalendarSlice';
 import userReducer from './Slices/UserSlice';
 import emergencyReducer from './Slices/EmergencyButtonSlice'
 import ExpensesReducer  from "./Slices/ExpensesSlice";
-
-// // initial state for testing purposes
-// export const initialState = {
-//     user: { id: null }, // Default to no user logged in
-//     calendar: {}, // Default calendar state
-//     //add emergency button for testing here??
-// };
-
-// // simple root reducer for testing
-// export const rootReducer = {
-//     user: userReducer,
-//     calendar: calendarReducer,
-//     emergency: emergencyReducer,
-//     expenses: ExpensesReducer,
-// };
+import taskBoardReducer from './Slices/TaskBoardSlice'; // Import TaskBoardSlice
 
 //store configuration
 export const store = configureStore({
@@ -26,5 +12,6 @@ export const store = configureStore({
         calendar: calendarReducer,
         emergency: emergencyReducer,
         expenses: ExpensesReducer,
+        taskBoard: taskBoardReducer,
     },
 });

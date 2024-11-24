@@ -10,6 +10,7 @@ export default function TabLayout() {
                 <Tabs.Screen name="Chat/index" options={{ title: 'Chat' }} />
                 <Tabs.Screen name="EmergencyNotifications/index" options={{ title: 'Emergency Notifications' }} />
                 <Tabs.Screen name="SharedExpenses" options={{ title: 'Shared Expenses' }} />
+                <Tabs.Screen name="TaskBoard" options={{ title: 'Task Board' }} />
             </Tabs>
         </>
     );

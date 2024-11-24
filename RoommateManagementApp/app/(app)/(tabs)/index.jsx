@@ -68,8 +68,8 @@ export default function HomePage() {
                     <FeatureTile
                         flex={2}
                         bgColor="#6F42C1" // purple
-                        text="2/3 Width Tile"
-                        onPress={() => console.log('Change me to navigation to go to a page!')}
+                        text="Task Board"
+                        onPress={() => {router.navigate('TaskBoard')}}
                     />
                     <FeatureTile
                         flex={1}

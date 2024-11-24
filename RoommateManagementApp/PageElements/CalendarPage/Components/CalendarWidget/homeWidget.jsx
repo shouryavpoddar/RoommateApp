@@ -30,7 +30,7 @@ const CalendarWidget = ()=>{
 
     return (
         //Disable touch events for the calendar
-        <View style={styles.container}>
+        <View style={styles.container} pointerEvents="none">
             <Calendar
                 style={styles.calendar}
                 theme={{
