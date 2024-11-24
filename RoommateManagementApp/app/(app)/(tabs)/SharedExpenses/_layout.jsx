@@ -1,6 +1,7 @@
 import {Tabs, Stack} from "expo-router";
 
 export default function SharedExpensesLayout() {
+    
     return (
         <>
             <Stack screenOptions={{ presentation: 'card', headerShown: false }}>

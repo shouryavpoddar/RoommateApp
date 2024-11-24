@@ -30,9 +30,10 @@ const styles = StyleSheet.create({
     container: {
         padding: 16,
         backgroundColor: '#E8F7EF',
-        borderRadius: 12,
-        marginBottom: 16,
+        borderRadius: 8,
+        // marginBottom: 16,
         width: '100%',
+        overflow: 'hidden', // Ensure it doesn't overflow
     },
     title: {
         fontSize: 18,
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
     youAreOwed: {
         fontSize: 18,
         color: '#2BAC76',
+        marginBottom: 16,
     },
 });
 

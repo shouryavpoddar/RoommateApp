@@ -1,25 +1,24 @@
-// src/Pages/GroupScreen/PageLayout/Layout.js
 import React from 'react';
-import { View, Modal, TouchableWithoutFeedback, FlatList } from 'react-native';
+import { View, Modal, TouchableWithoutFeedback, FlatList, StyleSheet } from 'react-native';
 
 const Layout = ({ children, ...restProps }) => {
     return (
-            <View className="flex-1 bg-[#4A154B] p-4" {...restProps}>
-                {children}
-            </View>
+        <View style={styles.layout} {...restProps}>
+            {children}
+        </View>
     );
 };
 
 Layout.BalanceSection = ({ children, ...restProps }) => (
-    <View className="mb-5" {...restProps}>
+    <View style={styles.balanceSection} {...restProps}>
         {children}
     </View>
 );
 
 Layout.ScrollSection = ({ children, ...restProps }) => (
     <FlatList
-        className="flex-1"
-        ItemSeparatorComponent={() => <View className="h-3" />}
+        style={styles.scrollSection}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
         {...restProps}
     >
         {children}
@@ -29,7 +28,7 @@ Layout.ScrollSection = ({ children, ...restProps }) => (
 Layout.SettleExpenseModal = ({ visible, children, onClose }) => (
     <Modal animationType="fade" transparent={true} visible={visible} onRequestClose={onClose}>
         <TouchableWithoutFeedback onPress={onClose}>
-            <View className="flex-1 justify-center items-center bg-black/50">
+            <View style={styles.modalBackdrop}>
                 <TouchableWithoutFeedback>
                     {children}
                 </TouchableWithoutFeedback>
@@ -37,5 +36,28 @@ Layout.SettleExpenseModal = ({ visible, children, onClose }) => (
         </TouchableWithoutFeedback>
     </Modal>
 );
+
+const styles = StyleSheet.create({
+    layout: {
+        flex: 1,
+        backgroundColor: '#4A154B',
+        padding: 16,
+    },
+    balanceSection: {
+        marginBottom: 20,
+    },
+    scrollSection: {
+        flex: 1,
+    },
+    separator: {
+        height: 12,
+    },
+    modalBackdrop: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+});
 
 export default Layout;

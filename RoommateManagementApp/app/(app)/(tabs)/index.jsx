@@ -4,6 +4,7 @@ import FeatureTile from "@/PageElements/HomePage/Components/FeatureTile";
 import Updates from "@/PageElements/HomePage/Components/RecentUpdates";
 import CalendarWidget from "@/PageElements/CalendarPage/Components/CalendarWidget/homeWidget";
 import EmergencyHomeWidget from '@/PageElements/EmergencyNotificationsPage/Components/EmergencyHomeWidget';
+import ExpensesWidget from '@/PageElements/ExpensesPage/Pages/FriendsPage/PageLayout/Components/ExpensesWidget'
 import {useRouter} from "expo-router";
 
 export default function HomePage() {
@@ -35,8 +36,8 @@ export default function HomePage() {
                     <FeatureTile
                         flex={1}
                         bgColor="#FF5733" // red
-                        text="Shared Expenses"
-                        onPress={() => {router.navigate('SharedExpenses')}}
+                        text="Tall Tile 2"
+                        onPress={() => console.log('Change me to navigation to go to a page!')}
                     />
                 </View>
 
@@ -48,6 +49,17 @@ export default function HomePage() {
                         text="Wide Tile - Full Width"
                         TileComponent={CalendarWidget}
                         onPress={() => {router.navigate('Calendar')}}
+                    />
+                </View>
+
+                {/* Row 4: Expenses widget */}
+                <View style={[styles.row, styles.mb]}>
+                    <FeatureTile
+                        flex={1}
+                        bgColor="#007BFF" // blue
+                        text="Wide Tile - Full Width"
+                        TileComponent={ExpensesWidget}
+                        onPress={() => {router.navigate('SharedExpenses')}}
                     />
                 </View>
 

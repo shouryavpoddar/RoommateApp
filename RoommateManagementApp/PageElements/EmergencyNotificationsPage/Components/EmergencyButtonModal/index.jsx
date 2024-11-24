@@ -43,7 +43,7 @@ export default function EmergencyButtonModal() {
 
     //Handle sending notification
     const handleNotification = () => {
-        Alert.alert(`Emergency button ${selectedButton.title} pressed with message: ${selectedButton.message}`)
+        Alert.alert(`Emergency button ${selectedButton.title} pressed!`, `${selectedButton.message}`)
         closeModal();
     }
 
