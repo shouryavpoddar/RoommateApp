@@ -13,6 +13,7 @@ import { router } from "expo-router"; // For navigation
 import { auth, db } from "../firebase.config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { signUp } from "@/StateManagement/Slices/UserSlice";
 
 const SignUpPage = () => {
     const [username, setUsername] = useState("");
@@ -22,13 +23,6 @@ const SignUpPage = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [scale] = useState(new Animated.Value(1)); // Animation for button press
     const dispatch = useDispatch();
-
-    // Generate a 6-digit group ID and update the input
-    const generateGroupID = () => {
-        const newGroupID = Math.floor(100000 + Math.random() * 900000).toString();
-        setGroupID(newGroupID); // Update the groupID field
-        Alert.alert("Success", `Your new group ID is ${newGroupID}`);
-    };
 
     const handleSignUp = async () => {
         if (!username || !email || !password || !confirmPassword) {
@@ -42,43 +36,25 @@ const SignUpPage = () => {
         }
 
         try {
-            // Sign up the user with Firebase Auth
+            // Create user with Firebase Auth
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const uid = userCredential.user.uid;
 
-            // Save user data to the "users" collection
-            await setDoc(doc(db, "users", uid), {
-                email,
-                username,
-                groupID,
-            });
-
-            // Check if the group exists
-            const groupDocRef = doc(db, "groups", groupID);
-            const groupDoc = await getDoc(groupDocRef);
-
-            if (groupDoc.exists()) {
-                // If the group exists, add the user to the group
-                await updateDoc(groupDocRef, {
-                    members: arrayUnion(uid),
-                });
-                console.log(`User added to existing group ${groupID}`);
-            } else {
-                // If the group does not exist, create a new group
-                await setDoc(groupDocRef, {
-                    groupID,
-                    createdAt: new Date(),
-                    members: [uid],
-                });
-                console.log(`New group ${groupID} created with user as a member`);
-            }
+            // Dispatch the signUp Thunk
+            await dispatch(signUp({ uid, email, username, groupID })).unwrap();
 
             Alert.alert("Success", "Your account has been created successfully!");
-            router.push("/log-in"); // Navigate to the login page
+            router.push("/log-in");
         } catch (error) {
-            console.error("Sign up failed:", error.message);
+            console.error("Sign up failed:", error);
             Alert.alert("Sign up failed", error.message);
         }
+    };
+
+    const generateGroupID = () => {
+        const newGroupID = Math.floor(100000 + Math.random() * 900000).toString();
+        setGroupID(newGroupID);
+        Alert.alert("Success", `Your new group ID is ${newGroupID}`);
     };
 
     const animateButton = () => {

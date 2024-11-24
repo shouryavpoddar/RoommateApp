@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db } from "@/firebase.config";
 
 // Thunk for user sign-up
@@ -13,6 +13,26 @@ export const signUp = createAsyncThunk(
                 username,
                 groupID,
             });
+
+            // Check if the group exists
+            const groupDocRef = doc(db, "groups", groupID);
+            const groupDoc = await getDoc(groupDocRef);
+
+            if (groupDoc.exists()) {
+                // If the group exists, add the user to the group
+                await updateDoc(groupDocRef, {
+                    members: arrayUnion(uid),
+                });
+                console.log(`User added to existing group ${groupID}`);
+            } else {
+                // If the group does not exist, create a new group
+                await setDoc(groupDocRef, {
+                    groupID,
+                    createdAt: new Date(),
+                    members: [uid],
+                });
+                console.log(`New group ${groupID} created with user as a member`);
+            }
 
             return { uid, email, username, groupID };
         } catch (error) {
