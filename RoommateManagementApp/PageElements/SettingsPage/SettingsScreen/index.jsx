@@ -52,9 +52,6 @@ export function SettingsScreenContent() {
                 { text: "Log Out", onPress: () => logoutUser() }
             ]
         );
-
-        //TEMP - REMOVE THIS WHEN MOBILE APP WORKING
-        logoutUser()
     };
 
     return (
