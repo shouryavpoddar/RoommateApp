@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert, Animated, StyleSheet } 
 import { useDispatch } from "react-redux";
 import { Redirect, router } from "expo-router";
 import { useNavigation } from "expo-router";
-import { setId } from "@/StateManagement/Slices/UserSlice";
+import {fetchUserData, setId} from "@/StateManagement/Slices/UserSlice";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase.config";
 
@@ -29,6 +29,7 @@ const LoginPage = () => {
             console.log(auth);
             const userCredential = await signInWithEmailAndPassword(auth, username, password);
             dispatch(setId(userCredential.user.uid));
+            dispatch(fetchUserData(userCredential.user.uid))
             router.navigate("/");
         } catch (e) {
             Alert.alert('Sign in failed', e.message);

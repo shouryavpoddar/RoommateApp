@@ -42,6 +42,46 @@ export const signUp = createAsyncThunk(
     }
 );
 
+export const saveFCMToken = createAsyncThunk(
+    "user/saveFCMToken",
+    async ({ uid, fcmToken }, { rejectWithValue }) => {
+        try {
+            const userDocRef = doc(db, "users", uid);
+
+            // Update the document, merging the fcmToken into an array
+            await updateDoc(userDocRef, {
+                fcmToken: fcmToken,
+            });
+
+            console.log("FCM token saved:", fcmToken);
+            return fcmToken;
+        } catch (error) {
+            console.error("Failed to save FCM token:", error);
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const fetchUserData = createAsyncThunk(
+    "user/fetchUserData",
+    async (uid, { rejectWithValue }) => {
+        try {
+            const userDocRef = doc(db, "users", uid);
+            const userDoc = await getDoc(userDocRef);
+
+            if (userDoc.exists()) {
+                const { username, groupID } = userDoc.data();
+                return { username, groupID };
+            } else {
+                throw new Error("User not found in Firestore.");
+            }
+        } catch (error) {
+            console.error("Failed to fetch user data:", error);
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 const userSlice = createSlice({
     name: "user",
     initialState: {
@@ -66,12 +106,19 @@ const userSlice = createSlice({
                 const { uid, username, groupID } = action.payload;
                 state.id = uid;
                 state.username = username;
+                console.log("User signed up:", username, groupID);
                 state.groupID = groupID;
                 state.error = null;
             })
             .addCase(signUp.rejected, (state, action) => {
                 state.error = action.payload;
-            });
+            })
+            .addCase(fetchUserData.fulfilled, (state, action) => {
+                const { username, groupID } = action.payload;
+                state.username = username;
+                state.groupID = groupID;
+                state.error = null;
+            })
     },
 });
 

@@ -1,13 +1,34 @@
 import React from 'react';
-import { ChatProvider } from "@/PageElements/ChatPage/Context";
-import ChatScreen from "@/PageElements/ChatPage/ChatScreen";
+import {useSelector} from "react-redux";
+import {FlatList, View} from "react-native";
+import ChatBubble from "@/PageElements/ChatPage/Components/ChatBubble";
+import MessageInput from "@/PageElements/ChatPage/Components/MessageInput";
 
-const Chat = () => {
+export default function ChatScreen() {
+    const chatHistory = useSelector(state => state.chat.chatHistory);
+
     return (
-        <ChatProvider>
-            <ChatScreen />
-        </ChatProvider>
-    );
-};
+        <View style={styles.container} testID='chat-main-page'>
+            {/* Chat Messages */}
+            <FlatList
+                data={chatHistory}
+                keyExtractor={(item) => item.id}
+                contentContainerStyle={styles.chatContainer}
+                renderItem={({item}) => <ChatBubble item={item} />}
+            />
 
-export default Chat;
+            {/* Message Input */}
+            <View style={styles.inputContainer}>
+                <MessageInput  />
+            </View>
+        </View>
+    );
+
+}
+
+const styles = {
+    container: {
+        flex: 1,
+        backgroundColor: '#4B225F', // Equivalent to 'bg-[#4B225F]'
+    },
+}
