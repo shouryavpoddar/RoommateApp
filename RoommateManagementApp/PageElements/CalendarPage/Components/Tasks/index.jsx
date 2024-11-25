@@ -14,14 +14,15 @@ const Task = () => {
                     <TouchableOpacity
                         key={index}
                         onPress={() => setSelectedTask(task)}
+                        style={styles.taskContainer}
                     >
-                        <Text>{task.title}</Text>
-                        <Text>{`${task.startTime} - ${task.endTime} | ${task.created}`}</Text>
+                        <Text style={styles.taskTitle}>{task.title}</Text>
+                        <Text style={styles.taskDetails}>{`${task.startTime} - ${task.endTime} | ${task.created}`}</Text>
                     </TouchableOpacity>
                 ))
             ) : (
-                <View>
-                    <Text>No tasks for the selected date.</Text>
+                <View style={styles.noTaskContainer}>
+                    <Text style={styles.noTaskText}>No tasks for the selected date.</Text>
                 </View>
             )}
         </>
