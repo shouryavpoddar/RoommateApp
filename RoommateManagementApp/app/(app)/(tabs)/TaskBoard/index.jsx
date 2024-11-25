@@ -30,8 +30,8 @@ const TaskBoardPage = () => {
                             style={styles.categoryButton}
                             onPress={() =>
                                 router.push({
-                                    pathname: 'TaskBoard/TaskCategoryPage',
-                                    params: { categoryName: category.name }
+                                    pathname: 'TaskBoard/TaskCategoryScreen',
+                                    params: { categoryName: category.name}
                                 })
                             }
                         >

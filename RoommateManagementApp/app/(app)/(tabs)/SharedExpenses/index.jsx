@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect } from 'react';
-import { FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { FlatList, TouchableOpacity, StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import ExpensesWiget from "@/PageElements/ExpensesPage/Pages/FriendsPage/PageLayout/Components/ExpensesWidget";
 import Layout from "@/PageElements/ExpensesPage/Pages/FriendsPage/PageLayout";
@@ -69,7 +69,9 @@ const FriendsScreen = () => {
 
     return (
         <Layout testID='expenses-friends-page'>
-            <ExpensesWiget />
+            <View style={styles.expenseWidgetWrapper}>
+                <ExpensesWiget />
+            </View>
             <FlatList
                 data={friendsWithBalances}
                 keyExtractor={(item) => item.id.toString()} // Ensure unique keys
@@ -83,6 +85,9 @@ const styles = StyleSheet.create({
     headerButton: {
         marginRight: 15,
     },
+    expenseWidgetWrapper: {
+        marginBottom: 15,
+    }
 });
 
 export default FriendsScreen;

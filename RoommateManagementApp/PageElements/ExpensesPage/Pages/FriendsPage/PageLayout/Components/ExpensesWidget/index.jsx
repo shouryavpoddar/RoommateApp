@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
         padding: 16,
         backgroundColor: '#E8F7EF',
         borderRadius: 8,
-        // marginBottom: 16,
+        //marginBottom: 16,
         width: '100%',
         overflow: 'hidden', // Ensure it doesn't overflow
     },
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     youAreOwed: {
         fontSize: 18,
         color: '#2BAC76',
-        marginBottom: 16,
+        //marginBottom: 16,
     },
 });
 
