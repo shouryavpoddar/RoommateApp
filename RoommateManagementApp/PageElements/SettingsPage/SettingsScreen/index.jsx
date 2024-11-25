@@ -52,6 +52,7 @@ export function SettingsScreenContent() {
                 { text: "Log Out", onPress: () => logoutUser() }
             ]
         );
+        logoutUser(); //need to remove
     };
 
     return (

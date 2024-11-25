@@ -1,37 +1,42 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, Animated, StyleSheet } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, Alert, Animated, StyleSheet } from "react-native";
 import { useDispatch } from "react-redux";
-import { Redirect, router } from "expo-router";
-import { useNavigation } from "expo-router";
-import { setId } from "@/StateManagement/Slices/UserSlice";
+import { useNavigation, router } from "expo-router";
+import { fetchUserDetails } from "@/StateManagement/Slices/UserSlice";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase.config";
 
 const LoginPage = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false); // Added loading state here
     const [scale] = useState(new Animated.Value(1)); // Animation for button press
     const dispatch = useDispatch();
     const navigation = useNavigation();
 
-    const handleLogin = () => {
-        if (username && password) {
-            handleAuth();
-        } else {
-            Alert.alert('Error', 'Please enter both username and password.');
+    const handleLogin = async () => {
+        if (!username || !password) {
+            Alert.alert("Error", "Please enter both username and password.");
+            return;
         }
-    };
 
-    const handleAuth = async () => {
         setLoading(true); // Set loading to true when authentication starts
         try {
-            console.log(auth);
             const userCredential = await signInWithEmailAndPassword(auth, username, password);
-            dispatch(setId(userCredential.user.uid));
-            router.navigate("/");
-        } catch (e) {
-            Alert.alert('Sign in failed', e.message);
+            const uid = userCredential.user.uid; // Get user's unique ID
+
+            console.log("User logged in with UID:", uid);
+
+            // Fetch user details and update Redux state
+            await dispatch(fetchUserDetails(uid));
+
+            console.log("User details fetched and stored in Redux.");
+
+            // Navigate to the main screen
+            router.replace("/");
+        } catch (error) {
+            console.error("Login failed:", error);
+            Alert.alert("Login Failed", error.message);
         } finally {
             setLoading(false); // Reset loading to false when authentication completes
         }
@@ -82,7 +87,7 @@ const LoginPage = () => {
                 </TouchableOpacity>
             </Animated.View>
 
-            <TouchableOpacity onPress={() => navigation.navigate('sign-up')}>
+            <TouchableOpacity onPress={() => navigation.navigate("sign-up")}>
                 <Text style={styles.signUpText}>Click here to Sign Up</Text>
             </TouchableOpacity>
         </View>
@@ -92,62 +97,62 @@ const LoginPage = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#EDEFF7', // Light gray background
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#EDEFF7",
         padding: 20,
     },
     title: {
         fontSize: 32,
-        textAlign: 'center',
-        fontWeight: 'bold',
+        textAlign: "center",
+        fontWeight: "bold",
         marginBottom: 48,
-        color: '#4A154B',
+        color: "#4A154B",
         letterSpacing: 2,
     },
     label: {
         fontSize: 18,
-        fontWeight: '600',
-        color: '#4A154B',
+        fontWeight: "600",
+        color: "#4A154B",
         marginBottom: 8,
-        alignSelf: 'flex-start',
+        alignSelf: "flex-start",
     },
     input: {
-        width: '100%',
+        width: "100%",
         height: 48,
         borderWidth: 1,
-        borderColor: '#4A154B',
+        borderColor: "#4A154B",
         borderRadius: 24,
         paddingHorizontal: 16,
         marginBottom: 20,
-        backgroundColor: '#EDEFF7',
-        shadowColor: '#000',
+        backgroundColor: "#EDEFF7",
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
     },
     buttonContainer: {
-        width: '100%',
+        width: "100%",
         marginBottom: 16,
     },
     button: {
-        backgroundColor: '#2BAC76',
+        backgroundColor: "#2BAC76",
         paddingVertical: 16,
         borderRadius: 24,
-        alignItems: 'center',
-        shadowColor: '#000',
+        alignItems: "center",
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 4,
     },
     buttonText: {
-        color: '#4A154B',
+        color: "#4A154B",
         fontSize: 18,
-        fontWeight: 'bold',
+        fontWeight: "bold",
         letterSpacing: 1,
     },
     signUpText: {
-        color: '#4A154B',
+        color: "#4A154B",
         fontSize: 14,
         marginTop: 10,
     },

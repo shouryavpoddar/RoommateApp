@@ -13,18 +13,15 @@ const Task = () => {
                 tasks[selectedDate].map((task, index) => (
                     <TouchableOpacity
                         key={index}
-                        style={styles.taskContainer}
-                        onPress={() => setSelectedTask(task)} // Open the modal when a task is pressed
+                        onPress={() => setSelectedTask(task)}
                     >
-                        <Text style={styles.taskTitle}>{task.title}</Text>
-                        <Text style={styles.taskDetails}>
-                            {`${task.created} | ${task.subtitle} | ${task.due}`}
-                        </Text>
+                        <Text>{task.title}</Text>
+                        <Text>{`${task.startTime} - ${task.endTime} | ${task.created}`}</Text>
                     </TouchableOpacity>
                 ))
             ) : (
-                <View style={styles.noTaskContainer}>
-                    <Text style={styles.noTaskText}>No tasks for the selected date.</Text>
+                <View>
+                    <Text>No tasks for the selected date.</Text>
                 </View>
             )}
         </>

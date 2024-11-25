@@ -1,10 +1,10 @@
-import React, { useContext, useState } from 'react';
-import { Text, Button, TextInput, StyleSheet, View } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { editTask, deleteTask } from "@/StateManagement/Slices/CalendarSlice";
-import { CalendarContext } from '../../Context';
+import React, { useContext, useState } from "react";
+import { Text, Button, TextInput, StyleSheet, View } from "react-native";
+import { useDispatch } from "react-redux";
+import { editTaskInDB, deleteTaskFromDB } from "@/StateManagement/Slices/CalendarSlice";
+import { CalendarContext } from "../../Context";
 
-const CalendarEventModal = () => {
+const CalendarEventModal = ({ groupID }) => {
     const { selectedTask: task, selectedDate, setSelectedTask: setTask } = useContext(CalendarContext);
     const dispatch = useDispatch();
 
@@ -12,7 +12,8 @@ const CalendarEventModal = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(task.title);
     const [editedDescription, setEditedDescription] = useState(task.description);
-    const [editedDue, setEditedDue] = useState(task.due);
+    const [editedStartTime, setEditedStartTime] = useState(task.startTime);
+    const [editedEndTime, setEditedEndTime] = useState(task.endTime);
 
     const closeModal = () => {
         setTask(null);
@@ -23,16 +24,31 @@ const CalendarEventModal = () => {
         const updatedTask = {
             title: editedTitle,
             description: editedDescription,
-            due: editedDue,
+            startTime: editedStartTime,
+            endTime: editedEndTime,
         };
-        dispatch(editTask({ date: selectedDate, taskId: task.id, updatedTask }));
+
+        dispatch(
+            editTaskInDB({
+                groupID,
+                date: selectedDate,
+                taskId: task.id,
+                updatedTask,
+            })
+        );
         setIsEditing(false);
         closeModal();
     };
 
     // Handle deleting the task
     const handleDelete = () => {
-        dispatch(deleteTask({ date: selectedDate, taskId: task.id }));
+        dispatch(
+            deleteTaskFromDB({
+                groupID,
+                date: selectedDate,
+                taskId: task.id,
+            })
+        );
         closeModal();
     };
 
@@ -56,22 +72,35 @@ const CalendarEventModal = () => {
                         style={styles.input}
                     />
 
-                    <Text style={styles.label}>Due Time</Text>
+                    <Text style={styles.label}>Start Time</Text>
                     <TextInput
-                        value={editedDue}
-                        onChangeText={setEditedDue}
+                        value={editedStartTime}
+                        onChangeText={setEditedStartTime}
                         style={styles.input}
+                        placeholder="e.g., 5:00 PM"
                     />
 
-                    <Button color={"#2BAC76"}   title="Save" onPress={handleEdit} />
+                    <Text style={styles.label}>End Time</Text>
+                    <TextInput
+                        value={editedEndTime}
+                        onChangeText={setEditedEndTime}
+                        style={styles.input}
+                        placeholder="e.g., 7:00 PM"
+                    />
+
+                    <Button color={"#2BAC76"} title="Save" onPress={handleEdit} />
                     <View style={{ marginBottom: 16 }} />
-                    <Button color={"#2BAC76"}  title="Cancel" onPress={() => setIsEditing(false)} />
+                    <Button
+                        color={"#2BAC76"}
+                        title="Cancel"
+                        onPress={() => setIsEditing(false)}
+                    />
                 </View>
             ) : (
                 <View>
                     <Text style={styles.heading}>{task.title}</Text>
                     <Text style={styles.description}>{task.description}</Text>
-                    <Text style={styles.due}>{task.due}</Text>
+                    <Text style={styles.time}>{`${task.startTime} - ${task.endTime}`}</Text>
                     <Button color={"#2BAC76"} title="Edit" onPress={() => setIsEditing(true)} />
                     <View style={{ marginBottom: 16 }} />
                     <Button color={"#2BAC76"} title="Delete" onPress={handleDelete} />
@@ -82,43 +111,39 @@ const CalendarEventModal = () => {
 };
 
 const styles = StyleSheet.create({
-    button: {
-        backgroundColor: '#2BAC76', // Green
-        padding: 16, // p-4
-    },
     container: {
-        width: '100%',
+        width: "100%",
         padding: 16,
     },
     heading: {
-        fontSize: 24, // text-xl
-        fontWeight: 'bold', // font-bold
-        color: '#4A154B', // Purple
-        marginBottom: 16, // mb-4
+        fontSize: 24,
+        fontWeight: "bold",
+        color: "#4A154B",
+        marginBottom: 16,
     },
     label: {
-        fontSize: 16, // text-base
-        fontWeight: '600', // font-semibold
-        color: '#4A154B', // Purple
-        marginBottom: 8, // mb-2
+        fontSize: 16,
+        fontWeight: "600",
+        color: "#4A154B",
+        marginBottom: 8,
     },
     description: {
-        fontSize: 16, // Default text
-        color: '#4A154B', // Purple
-        marginBottom: 8, // mb-2
-    },
-    due: {
         fontSize: 16,
-        color: '#4A154B',
-        marginBottom: 16, // mb-4
+        color: "#4A154B",
+        marginBottom: 8,
+    },
+    time: {
+        fontSize: 16,
+        color: "#4A154B",
+        marginBottom: 16,
     },
     input: {
         borderWidth: 1,
-        borderColor: '#D1D5DB', // Gray border
-        padding: 8, // p-2
-        marginBottom: 16, // mb-4
-        borderRadius: 4, // Rounded corners
-        width: '100%',
+        borderColor: "#D1D5DB",
+        padding: 8,
+        marginBottom: 16,
+        borderRadius: 4,
+        width: "100%",
     },
 });
 

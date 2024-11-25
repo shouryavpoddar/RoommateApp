@@ -42,6 +42,31 @@ export const signUp = createAsyncThunk(
     }
 );
 
+// Thunk to fetch user details from Firestore
+export const fetchUserDetails = createAsyncThunk(
+    "user/fetchUserDetails",
+    async (uid, { rejectWithValue }) => {
+        try {
+            console.log("Fetching user details for:", uid);
+
+            const userRef = doc(db, "users", uid);
+            const userSnapshot = await getDoc(userRef);
+
+            if (userSnapshot.exists()) {
+                const userData = userSnapshot.data();
+                console.log("Fetched user details:", userData);
+                return userData; // Contains groupID
+            } else {
+                throw new Error("User not found.");
+            }
+        } catch (error) {
+            console.error("Failed to fetch user details:", error);
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+
 const userSlice = createSlice({
     name: "user",
     initialState: {
@@ -62,6 +87,7 @@ const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            // Handle sign-up
             .addCase(signUp.fulfilled, (state, action) => {
                 const { uid, username, groupID } = action.payload;
                 state.id = uid;
@@ -70,6 +96,16 @@ const userSlice = createSlice({
                 state.error = null;
             })
             .addCase(signUp.rejected, (state, action) => {
+                state.error = action.payload;
+            })
+            // Handle fetching user details
+            .addCase(fetchUserDetails.fulfilled, (state, action) => {
+                const { email, username, groupID } = action.payload;
+                state.username = username;
+                state.groupID = groupID;
+                state.error = null;
+            })
+            .addCase(fetchUserDetails.rejected, (state, action) => {
                 state.error = action.payload;
             });
     },
