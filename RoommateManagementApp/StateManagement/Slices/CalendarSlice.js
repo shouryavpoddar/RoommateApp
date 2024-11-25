@@ -16,6 +16,7 @@ export const fetchTasksFromDB = createAsyncThunk(
     async ({ groupID }, { rejectWithValue }) => {
         try {
             if (!groupID) throw new Error("Group ID is undefined. Cannot fetch calendar events.");
+            console.log ("fetching events from db", groupID);
 
             const tasks = {};
             const calendarRef = collection(db, `groups/${groupID}/calendarEvents`);
