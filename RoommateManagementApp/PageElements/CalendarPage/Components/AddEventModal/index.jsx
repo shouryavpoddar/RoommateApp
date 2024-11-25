@@ -1,28 +1,40 @@
-import React, { useState, useContext } from 'react';
-import { Text, TextInput, Button, StyleSheet, View } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { CalendarContext } from '../../Context';
-import { addTask } from '@/StateManagement/Slices/CalendarSlice';
+import React, { useState, useContext } from "react";
+import { Text, TextInput, Button, StyleSheet, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { CalendarContext } from "../../Context";
+import { addTaskToDB } from "@/StateManagement/Slices/CalendarSlice";
 
 const AddEventModal = () => {
-    const { selectedDate, setIsAddEventModalVisible } = useContext(CalendarContext); // Get selectedDate from the context
+    const { selectedDate, setIsAddEventModalVisible } = useContext(CalendarContext);
     const dispatch = useDispatch();
 
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [due, setDue] = useState('');
+    // Retrieve the logged-in user's groupID from the Redux state
+    const groupID = useSelector((state) => state.user.groupID);
+    console.log("Current groupID from Redux:", groupID);
+
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
 
     const handleSubmit = () => {
-        const newEvent = {
+        if (!groupID) {
+            alert("Group ID is missing. Cannot create event.");
+            return;
+        }
+
+        console.log("Creating event for groupID:", groupID);
+
+        const newTask = {
             title,
             description,
-            due,
+            startTime,
+            endTime,
         };
 
-        // Dispatch the new task to Redux
-        dispatch(addTask({ date: selectedDate, task: newEvent }));
-
-        setIsAddEventModalVisible(false); // Close modal after submitting
+        // Dispatch the Thunk with the groupID
+        dispatch(addTaskToDB({ groupID, date: selectedDate, task: newTask }));
+        setIsAddEventModalVisible(false);
     };
 
     return (
@@ -30,54 +42,43 @@ const AddEventModal = () => {
             <Text style={styles.heading}>Add Event</Text>
 
             <Text style={styles.label}>Title</Text>
-            <TextInput
-                value={title}
-                onChangeText={setTitle}
-                style={styles.input}
-            />
+            <TextInput value={title} onChangeText={setTitle} style={styles.input} />
 
             <Text style={styles.label}>Description</Text>
-            <TextInput
-                value={description}
-                onChangeText={setDescription}
-                style={styles.input}
-            />
+            <TextInput value={description} onChangeText={setDescription} style={styles.input} />
 
-            <Text style={styles.label}>Due Time</Text>
-            <TextInput
-                value={due}
-                onChangeText={setDue}
-                style={styles.input}
-            />
+            <Text style={styles.label}>Start Time</Text>
+            <TextInput value={startTime} onChangeText={setStartTime} style={styles.input} />
 
-            <Button color={'#2BAC76'} title="Add" onPress={handleSubmit} />
+            <Text style={styles.label}>End Time</Text>
+            <TextInput value={endTime} onChangeText={setEndTime} style={styles.input} />
+
+            <Button color={"#2BAC76"} title="Add" onPress={handleSubmit} />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
-        padding: 16, // Equivalent to 'p-4'
+        padding: 16,
     },
     heading: {
-        fontSize: 24, // Equivalent to 'text-xl'
-        fontWeight: 'bold', // Equivalent to 'font-bold'
-        marginBottom: 16, // Equivalent to 'mb-4'
+        fontSize: 24,
+        fontWeight: "bold",
+        marginBottom: 16,
     },
     label: {
-        fontSize: 16, // Equivalent to 'text-base'
-        fontWeight: '600', // Equivalent to 'font-semibold'
-        color: '#4A154B', // Custom color (purple shade)
-        marginBottom: 8, // Equivalent to 'mb-2'
+        fontSize: 16,
+        fontWeight: "600",
+        marginBottom: 8,
     },
     input: {
-        borderWidth: 1, // Equivalent to 'border'
-        borderColor: '#D1D5DB', // Equivalent to 'border-gray-300'
-        padding: 8, // Equivalent to 'p-2'
-        marginBottom: 16, // Equivalent to 'mb-4'
-        borderRadius: 4, // Equivalent to 'rounded'
-        width: '100%',
+        borderWidth: 1,
+        borderColor: "#D1D5DB",
+        padding: 8,
+        marginBottom: 16,
+        borderRadius: 4,
+        width: "100%",
     },
 });
 
