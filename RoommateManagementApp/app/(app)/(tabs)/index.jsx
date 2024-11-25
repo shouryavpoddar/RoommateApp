@@ -5,6 +5,7 @@ import Updates from "@/PageElements/HomePage/Components/RecentUpdates";
 import CalendarWidget from "@/PageElements/CalendarPage/Components/CalendarWidget/homeWidget";
 import EmergencyHomeWidget from '@/PageElements/EmergencyNotificationsPage/Components/EmergencyHomeWidget';
 import ExpensesWidget from '@/PageElements/ExpensesPage/Pages/FriendsPage/PageLayout/Components/ExpensesWidget'
+import TaskBoardWidget from '@/PageElements/TaskBoardPage/PageLayout/Components/TaskBoardWidget';
 import {useRouter} from "expo-router";
 
 export default function HomePage() {
@@ -64,18 +65,13 @@ export default function HomePage() {
                 </View>
 
                 {/* Row 4: Two tiles, one 2/3 width, the other 1/3 */}
-                <View style={[styles.row, styles.mb]}>
-                    <FeatureTile
-                        flex={2}
-                        bgColor="#6F42C1" // purple
-                        text="Task Board"
-                        onPress={() => {router.navigate('TaskBoard')}}
-                    />
+                <View style={[styles.row, styles.mbLast]}>
                     <FeatureTile
                         flex={1}
-                        bgColor="#FFC107" // yellow
-                        text="1/3 Width Tile"
-                        onPress={() => console.log('Change me to navigation to go to a page!')}
+                        bgColor="#6F42C1" // purple
+                        text="Task Board"
+                        TileComponent={TaskBoardWidget}
+                        onPress={() => {router.navigate('TaskBoard')}}
                     />
                 </View>
             </ScrollView>
@@ -98,4 +94,7 @@ const styles = StyleSheet.create({
     mb: {
         marginBottom: 12, // mb-3 in Tailwind
     },
+    mbLast: {
+        marginBottom: 40,
+    }
 });

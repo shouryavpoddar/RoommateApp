@@ -52,10 +52,10 @@ const styles = StyleSheet.create({
     container: {
         width: Dimensions.get("window").width - 32, // Full width minus padding/margin
         backgroundColor: "#EDEFF7",
-        borderRadius: 12,
+        borderRadius: 8,
         padding: 16,
         marginHorizontal: 16, // Center the widget
-        marginBottom: 16,
+        //marginBottom: 16,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
