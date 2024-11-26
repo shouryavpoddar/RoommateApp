@@ -21,6 +21,9 @@ exports.sendChatMessageNotification = functions.firestore
 
     const groupId = snapshots.params.groupId;
     const messageId = snapshots.params.messageId;
+    const message =
+        (await admin.firestore().collection("groups").doc(groupId).collection("chats").doc(messageId).get())
+        .data().text
 
     admin.firestore().collection("groups").doc(groupId).get().then((doc) => {
         const group = doc.data();
@@ -28,7 +31,7 @@ exports.sendChatMessageNotification = functions.firestore
 
         const notification = {
             title: "New Message",
-            body: `You have a new message in ${groupId}`,
+            body: message,
         };
 
         members.forEach(async (member) => {

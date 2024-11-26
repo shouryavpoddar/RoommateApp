@@ -93,7 +93,6 @@ const chatSlice = createSlice({
     reducers: {
         updateChatHistory: (state, action) => {
             state.chatHistory = action.payload;// Replace the chat history with the latest messages
-            console.log("Chat history updated:", action.payload);
         },
     },
     extraReducers: (builder) => {
@@ -118,7 +117,6 @@ const chatSlice = createSlice({
             })
             .addCase(loadMessages.fulfilled, (state, action) => {
                 state.isLoading = false;
-                console.log("Messages loaded:", action.payload);
                 state.chatHistory = action.payload; // Replace the chat history with loaded messages
             })
             .addCase(loadMessages.rejected, (state, action) => {

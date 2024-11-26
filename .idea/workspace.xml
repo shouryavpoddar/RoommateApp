@@ -6,16 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="6b4ae8f6-2241-453b-9437-feabb8f02d5f" name="Changes" comment="Created Tabs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/ChatScreen/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/ChatScreen/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/ChatScreen/index.jsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/Components/ChatBubble/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/Components/ChatBubble/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RoommateManagementApp/StateManagement/Slices/ChatSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/StateManagement/Slices/ChatSlice.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/(tabs)/Chat/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/(tabs)/Chat/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/_layout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/_layout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/StateManagement/Slices/UserSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/StateManagement/Slices/UserSlice.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RoommateManagementApp/app/_layout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/app/_layout.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/functions/.eslintrc.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/app/log-in.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/app/log-in.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/firebase.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/firebase.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RoommateManagementApp/functions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/functions/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/functions/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/functions/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/functions/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/functions/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,12 +45,12 @@
     &quot;assignee&quot;: &quot;shouryavpoddar&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/SreyaSrinidhi/RoommateApp.git&quot;,
-    &quot;accountId&quot;: &quot;ed4303fb-29c6-4fc2-a5b3-ac2f53e6aa35&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/SreyaSrinidhi/RoommateApp.git",
+    "accountId": "774176f8-a493-475b-92ec-000f6d2f21f9"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -162,7 +160,8 @@
       <workItem from="1731133285822" duration="36000" />
       <workItem from="1731774958495" duration="7739000" />
       <workItem from="1732537584248" duration="7849000" />
-      <workItem from="1732585396064" duration="12263000" />
+      <workItem from="1732585396064" duration="19723000" />
+      <workItem from="1732615191943" duration="3101000" />
     </task>
     <task id="LOCAL-00001" summary="Created Tabs">
       <option name="closed" value="true" />

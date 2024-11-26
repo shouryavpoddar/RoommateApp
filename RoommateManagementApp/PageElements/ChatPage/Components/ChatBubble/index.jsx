@@ -4,10 +4,13 @@ import { useSelector } from "react-redux";
 
 const ChatBubble = ({ item }) => {
     const userId = useSelector(state => state.user.id);
-    const isSender = item.senderID == userId;
+    const users = useSelector(state => state.user.roommates);
+    const isSender = item.senderID === userId;
 
-    console.log("ChatBubble isSender:", isSender);
-    console.log("ChatBubble item:", item);
+    // Find the sender's username if it's not the current user
+    const senderUsername = !isSender
+        ? users.find(user => user.id === item.senderID)?.username || "Unknown"
+        : "You";
 
     // Convert Firestore timestamp to Date
     const timestamp = item.timestamp?.seconds
@@ -24,10 +27,15 @@ const ChatBubble = ({ item }) => {
             {!isSender && (
                 <Image
                     style={styles.avatar}
-                    source={{ uri: item.avatar }}
+                    source={{ uri: item.avatar || "https://via.placeholder.com/40" }}
                 />
             )}
             <View style={[styles.messageBubble, isSender ? styles.senderBubble : styles.receiverBubble]}>
+                {!isSender && (
+                    <Text style={styles.username}>
+                        {senderUsername}
+                    </Text>
+                )}
                 <Text style={isSender ? styles.senderText : styles.receiverText}>
                     {item.text}
                 </Text>
@@ -69,7 +77,12 @@ const styles = StyleSheet.create({
         color: '#4A154B',
     },
     receiverText: {
-        color: '#4A154B',
+        color: '#FFFFFF',
+    },
+    username: {
+        fontWeight: 'bold',
+        fontSize: 14,
+        marginBottom: 4,
     },
     timestamp: {
         fontSize: 12,
