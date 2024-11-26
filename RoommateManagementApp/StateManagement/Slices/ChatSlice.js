@@ -1,6 +1,33 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { doc, collection, addDoc, query, getDocs, orderBy } from "firebase/firestore";
+import { collection, addDoc, query, getDocs, orderBy,onSnapshot } from "firebase/firestore";
 import { db } from "@/firebase.config"; // Replace with your Firebase config path
+
+export const subscribeToMessages = createAsyncThunk(
+    "chat/subscribeToMessages",
+    (groupID, { dispatch, rejectWithValue }) => {
+        try {
+            const chatCollectionRef = collection(db, "groups", groupID, "chats");
+            const chatQuery = query(chatCollectionRef, orderBy("timestamp", "asc"));
+
+            // Set up the real-time listener
+            const unsubscribe = onSnapshot(chatQuery, (snapshot) => {
+                const messages = snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+
+                // Dispatch an action to update chat history
+                dispatch(chatSlice.actions.updateChatHistory(messages));
+            });
+
+            // Return the unsubscribe function to stop listening if needed
+            return unsubscribe;
+        } catch (error) {
+            console.error("Failed to subscribe to messages:", error);
+            return rejectWithValue(error.message);
+        }
+    }
+);
 
 // Thunk to send a chat message
 export const sendMessage = createAsyncThunk(
@@ -12,10 +39,10 @@ export const sendMessage = createAsyncThunk(
 
             // Create the message document
             const message = {
-                id: `${Date.now()}-${senderID}`, // Unique ID for the message
+                id: `${Date.now()}-${senderID}`,
                 senderID,
                 text,
-                timestamp: new Date(), // Current timestamp
+                timestamp: new Date(),
             };
 
             // Add the message to Firestore
@@ -35,14 +62,11 @@ export const loadMessages = createAsyncThunk(
     "chat/loadMessages",
     async (groupID, { rejectWithValue }) => {
         try {
-            // Reference the group's chats subcollection
             const chatCollectionRef = collection(db, "groups", groupID, "chats");
 
-            // Query the chats in order of timestamp
             const chatQuery = query(chatCollectionRef, orderBy("timestamp", "asc"));
             const snapshot = await getDocs(chatQuery);
 
-            // Map Firestore documents into an array
             const messages = snapshot.docs.map((doc) => ({
                 id: doc.id,
                 ...doc.data(),
@@ -67,7 +91,10 @@ const chatSlice = createSlice({
     name: "chat",
     initialState,
     reducers: {
-        // Add reducers here if needed, e.g., for local operations
+        updateChatHistory: (state, action) => {
+            state.chatHistory = action.payload;// Replace the chat history with the latest messages
+            console.log("Chat history updated:", action.payload);
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -78,7 +105,6 @@ const chatSlice = createSlice({
             })
             .addCase(sendMessage.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.chatHistory.push(action.payload); // Add the new message to the chat history
             })
             .addCase(sendMessage.rejected, (state, action) => {
                 state.isLoading = false;
@@ -92,6 +118,7 @@ const chatSlice = createSlice({
             })
             .addCase(loadMessages.fulfilled, (state, action) => {
                 state.isLoading = false;
+                console.log("Messages loaded:", action.payload);
                 state.chatHistory = action.payload; // Replace the chat history with loaded messages
             })
             .addCase(loadMessages.rejected, (state, action) => {

@@ -5,10 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6b4ae8f6-2241-453b-9437-feabb8f02d5f" name="Changes" comment="Created Tabs">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_16_24,_4_15 PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_16_24__4_15PM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/ChatScreen/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/ChatScreen/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/Components/ChatBubble/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ChatPage/Components/ChatBubble/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/StateManagement/Slices/ChatSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/StateManagement/Slices/ChatSlice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/(tabs)/Chat/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/(tabs)/Chat/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/_layout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/_layout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/app/_layout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/app/_layout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/functions/.eslintrc.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/functions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/functions/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/functions/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/functions/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/functions/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/functions/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,8 +28,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JavaScript File" />
         <option value="JSX File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -43,7 +50,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/SreyaSrinidhi/RoommateApp.git&quot;,
-    &quot;accountId&quot;: &quot;774176f8-a493-475b-92ec-000f6d2f21f9&quot;
+    &quot;accountId&quot;: &quot;ed4303fb-29c6-4fc2-a5b3-ac2f53e6aa35&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -67,7 +74,7 @@
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev-client-app&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Notifications&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Projects/RoommateApp&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -97,7 +104,7 @@
       <recent name="$PROJECT_DIR$/roommate-app/src/Pages/Calander/PageLayout/Components" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="npm.start">
     <configuration name="Android" type="ReactNative" factoryName="React Native" singleton="false">
       <node-interpreter value="project" />
       <react-native value="$PROJECT_DIR$/roommate-app/node_modules/react-native" />
@@ -154,6 +161,8 @@
       <workItem from="1729209538546" duration="36521000" />
       <workItem from="1731133285822" duration="36000" />
       <workItem from="1731774958495" duration="7739000" />
+      <workItem from="1732537584248" duration="7849000" />
+      <workItem from="1732585396064" duration="12263000" />
     </task>
     <task id="LOCAL-00001" summary="Created Tabs">
       <option name="closed" value="true" />

@@ -1,11 +1,28 @@
-import React from 'react';
-import {useSelector} from "react-redux";
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from "react-redux";
 import {FlatList, View} from "react-native";
 import ChatBubble from "@/PageElements/ChatPage/Components/ChatBubble";
 import MessageInput from "@/PageElements/ChatPage/Components/MessageInput";
+import {loadMessages, subscribeToMessages} from "@/StateManagement/Slices/ChatSlice";
 
 export default function ChatScreen() {
     const chatHistory = useSelector(state => state.chat.chatHistory);
+    const groupID = useSelector(state => state.user.groupID);
+    const dispatch = useDispatch();
+
+
+    useEffect(() => {
+        // Load existing messages once
+        dispatch(loadMessages(groupID));
+
+        // Set up real-time subscription
+        const unsubscribe = dispatch(subscribeToMessages(groupID));
+
+        // Cleanup subscription on component unmount
+        return () => {
+            if (typeof unsubscribe === "function") unsubscribe();
+        };
+    }, [groupID, dispatch]);
 
     return (
         <View style={styles.container} testID='chat-main-page'>

@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, Image, StyleSheet } from 'react-native';
+import {loadMessages, subscribeToMessages} from "@/StateManagement/Slices/ChatSlice";
+import {useDispatch, useSelector} from "react-redux";
 
 export default function ChatScreen() {
     const [message, setMessage] = useState('');
-    const [chatHistory, setChatHistory] = useState([
-        {
-            id: '1',
-            text: "Going well! I’ll take care of it tomorrow 😊",
-            isSender: false,
-            timestamp: "12:47 PM",
-            avatar: 'https://i.pinimg.com/564x/9c/ac/dc/9cacdc207e8997bf90a3daf9c8aaca80.jpg',
-        },
-        {
-            id: '2',
-            text: "Hey! How’s the cleaning schedule going?",
-            isSender: true,
-            timestamp: "12:55 PM",
-        },
-    ]);
+    const groupID =  useSelector(state => state.user.groupID);
+    const dispatch = useDispatch();
+    const chatHistory = useSelector(state => state.chat.chatHistory);
+
+    useEffect(() => {
+        // Load existing messages once
+        dispatch(loadMessages(groupID));
+
+        // Set up real-time subscription
+        const unsubscribe = dispatch(subscribeToMessages(groupID));
+
+        // Cleanup subscription on component unmount
+        return () => {
+            if (typeof unsubscribe === "function") unsubscribe();
+        };
+    }, [groupID, dispatch]);
 
     const handleSend = () => {
         if (message.trim()) {
@@ -27,7 +30,6 @@ export default function ChatScreen() {
                 isSender: true,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
-            setChatHistory([...chatHistory, newMessage]); // Adds message to the end of the array
             setMessage('');
         }
     };

@@ -2,7 +2,7 @@ import { Redirect, Stack } from "expo-router";
 import {useDispatch, useSelector} from "react-redux";
 import { auth } from "../../firebase.config"; // Ensure this is correct
 import { useState, useEffect } from "react";
-import {View, ActivityIndicator, PermissionsAndroid} from "react-native";
+import {View, ActivityIndicator, PermissionsAndroid, Alert} from "react-native";
 import messaging from "@react-native-firebase/messaging";
 import {saveFCMToken} from "@/StateManagement/Slices/UserSlice";
 
@@ -27,8 +27,6 @@ export default function RootLayout() {
         console.error("Error fetching FCM token:", error);
       }
     };
-
-
     fetchFCMToken();
 
     // Listener for token refresh
@@ -57,6 +55,14 @@ export default function RootLayout() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(onAuthStateChanged);
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage.notification));
+    });
+
+    return unsubscribe; // Cleanup listener on component unmount
   }, []);
 
   if (!user && !initializing) {

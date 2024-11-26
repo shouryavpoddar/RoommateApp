@@ -4,12 +4,20 @@ import { useSelector } from "react-redux";
 
 const ChatBubble = ({ item }) => {
     const userId = useSelector(state => state.user.id);
-    const isSender = item.senderId === userId;
+    const isSender = item.senderID == userId;
 
-    // Convert timestamp to a readable format
-    const formattedTimestamp = item.timestamp instanceof Date
-        ? item.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        : new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    console.log("ChatBubble isSender:", isSender);
+    console.log("ChatBubble item:", item);
+
+    // Convert Firestore timestamp to Date
+    const timestamp = item.timestamp?.seconds
+        ? new Date(item.timestamp.seconds * 1000)
+        : new Date(item.timestamp);
+
+    const formattedTimestamp = timestamp.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+    });
 
     return (
         <View style={[styles.messageRow, isSender && styles.messageRowSender]}>

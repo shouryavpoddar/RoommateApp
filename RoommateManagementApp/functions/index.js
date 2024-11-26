@@ -1,19 +1,50 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
 
-const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
+admin.initializeApp();
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+const sendNotification = async (message) => {
+    try {
+        const response = await admin.messaging().send(message);
+        console.log("Notification sent successfully:", response);
+        return response;
+    } catch (error) {
+        console.error("Error sending notification:", error);
+        throw new Error(error.message);
+    }
+};
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+exports.sendChatMessageNotification = functions.firestore
+    .onDocumentCreated(
+        "groups/{groupId}/chats/{messageId}",
+        async (snapshots, context)=>{
+
+    const groupId = snapshots.params.groupId;
+    const messageId = snapshots.params.messageId;
+
+    admin.firestore().collection("groups").doc(groupId).get().then((doc) => {
+        const group = doc.data();
+        const members = group.members;
+
+        const notification = {
+            title: "New Message",
+            body: `You have a new message in ${groupId}`,
+        };
+
+        members.forEach(async (member) => {
+            const userDoc = await admin.firestore().collection("users").doc(member).get();
+            const user = userDoc.data();
+
+            if (user.fcmToken) {
+                const message = {
+                    notification,
+                    token: user.fcmToken,
+                };
+
+                await admin.messaging().send(message);
+            }
+        });
+    });
+
+
+    })
