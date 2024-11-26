@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import {useRouter} from "expo-router";
-import { editTask } from '@/StateManagement/Slices/TaskBoardSlice';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { useRouter } from "expo-router";
+import { editTaskInDB } from '../../../../StateManagement/Slices/TaskBoardSlice';
 import EditTaskModal from '../../PageLayout/Components/EditTaskModal';
 
-const ShowAllTasks = () => {
+const ShowAllTasks = ({ groupID }) => {
     const categories = useSelector((state) => state.taskBoard.categories); // Fetch categories from Redux
     const dispatch = useDispatch();
     const router = useRouter();
@@ -51,9 +51,23 @@ const ShowAllTasks = () => {
     };
 
     // Handle editing tasks
-    const handleEditTask = (updatedTask) => {
-        dispatch(editTask({ categoryName: updatedTask.categoryName, taskId: updatedTask.id, updatedTask }));
-        setIsEditModalVisible(false);
+    const handleEditTask = async (updatedTask) => {
+        if (!groupID) {
+            Alert.alert("Error", "Group ID is undefined. Cannot update task.");
+            return;
+        }
+
+        try {
+            await dispatch(editTaskInDB({
+                groupID,
+                date: updatedTask.deadline,
+                taskId: updatedTask.id,
+                updatedTask
+            })).unwrap();
+            setIsEditModalVisible(false);
+        } catch (error) {
+            Alert.alert("Error", error.message || "Failed to update task.");
+        }
     };
 
     return (
@@ -99,6 +113,7 @@ const ShowAllTasks = () => {
                     visible={isEditModalVisible}
                     task={selectedTask}
                     category={{ name: selectedTask.categoryName }}
+                    groupID={groupID} // Pass groupID to modal
                     onClose={() => setIsEditModalVisible(false)}
                     onSave={handleEditTask}
                 />

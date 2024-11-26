@@ -4,9 +4,9 @@ import { Ionicons } from '@expo/vector-icons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch } from 'react-redux';
-import { editTask } from '@/StateManagement/Slices/TaskBoardSlice'; 
+import { editTaskInDB } from '../../../../../StateManagement/Slices/TaskBoardSlice';
 
-const EditTaskModal = ({ visible, onClose, task, category }) => {
+const EditTaskModal = ({ visible, onClose, task, category, groupID }) => {
     const [editedTask, setEditedTask] = useState(null);
     const [isDatePickerVisible, setDatePickerVisible] = useState(false);
     const [isPickerVisible, setPickerVisible] = useState(false);
@@ -17,19 +17,28 @@ const EditTaskModal = ({ visible, onClose, task, category }) => {
         setEditedTask(task);
     }, [task]);
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!editedTask?.name?.trim()) {
-            Alert.alert('Error', 'Task name cannot be empty!');
+            Alert.alert("Error", "Task name cannot be empty!");
             return;
         }
 
-        if (!category?.name) {
-            Alert.alert('Error', 'Invalid category data!');
+        if (!category?.name || !groupID) {
+            Alert.alert("Error", "Invalid category or group data!");
             return;
         }
 
-        dispatch(editTask({ categoryName: category.name, taskId: editedTask.id, updatedTask: editedTask }));
-        onClose();
+        try {
+            await dispatch(editTaskInDB({
+                groupID,
+                date: editedTask.deadline,
+                taskId: editedTask.id,
+                updatedTask: editedTask
+            })).unwrap();
+            onClose();
+        } catch (error) {
+            Alert.alert("Error", error.message || "Failed to edit task.");
+        }
     };
 
     const toggleStatus = () => {
@@ -101,7 +110,6 @@ const EditTaskModal = ({ visible, onClose, task, category }) => {
                                             setPickerVisible(false);
                                         }}
                                     >
-                                        {/* NOTE - NEED TO UPDATE THIS TO USE ACTUAL GROUPMATES INSTEAD OF HARD CODE */}
                                         <Picker.Item label="Unassigned" value="" />
                                         <Picker.Item label="You" value="You" />
                                         <Picker.Item label="Teammate 1" value="Teammate 1" />

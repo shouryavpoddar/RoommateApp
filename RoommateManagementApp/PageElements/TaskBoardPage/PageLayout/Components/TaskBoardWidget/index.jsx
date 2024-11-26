@@ -1,48 +1,43 @@
-import React from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
-import { useSelector } from "react-redux"; // Import from Redux
+import React, { useEffect } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTasksFromDB } from "../../../../../StateManagement/Slices/TaskBoardSlice";
 
-const TaskBoardWidget = () => {
-    const categories = useSelector((state) => state.taskBoard.categories); // Fetch categories from Redux
+const TaskBoardWidget = ({ groupID }) => {
+    const dispatch = useDispatch();
+    const { categories, loading, error } = useSelector((state) => state.taskBoard);
 
-    const getTasksWithDeadlines = () => {
-        const tasksWithDeadlines = [];
-
-        if (categories) {
-            categories.forEach((category) => {
-                category.tasks.forEach((task) => {
-                    if (
-                        task.assignedTo?.toLowerCase() === "you" && // Assigned to "you"
-                        task.deadline && // Has a deadline
-                        task.status !== "done" // Exclude done tasks
-                    ) {
-                        tasksWithDeadlines.push({
-                            ...task,
-                            categoryName: category.name,
-                        });
-                    }
-                });
-            });
+    useEffect(() => {
+        if (groupID) {
+            dispatch(fetchTasksFromDB({ groupID }));
         }
+    }, [groupID, dispatch]);
 
-        return tasksWithDeadlines.sort((a, b) => new Date(a.deadline) - new Date(b.deadline)); // Sort tasks by deadline
-    };
+    if (loading) {
+        return <Text style={styles.loading}>Loading tasks...</Text>;
+    }
 
-    const tasks = getTasksWithDeadlines();
+    if (error) {
+        return <Text style={styles.error}>Failed to load tasks: {error}</Text>;
+    }
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Your Upcoming Tasks</Text>
-            {tasks.length > 0 ? (
-                tasks.slice(0, 3).map((task) => (
-                    <View key={task.id} style={styles.taskItem}>
-                        <Text style={styles.taskName}>{task.name}</Text>
-                        <Text style={styles.taskCategory}>{task.categoryName}</Text>
-                        <Text style={styles.taskDate}>{task.deadline}</Text>
+            {Object.keys(categories).length > 0 ? (
+                Object.entries(categories).map(([category, tasks]) => (
+                    <View key={category} style={styles.category}>
+                        <Text style={styles.categoryTitle}>{category}</Text>
+                        {tasks.slice(0, 3).map((task) => (
+                            <View key={task.id} style={styles.taskItem}>
+                                <Text style={styles.taskName}>{task.name}</Text>
+                                <Text style={styles.taskDeadline}>{task.deadline || "No deadline"}</Text>
+                            </View>
+                        ))}
                     </View>
                 ))
             ) : (
-                <Text style={styles.noTasks}>All your tasks are done! Hooray!</Text>
+                <Text style={styles.noTasks}>No tasks available. Hooray!</Text>
             )}
         </View>
     );
@@ -50,16 +45,10 @@ const TaskBoardWidget = () => {
 
 const styles = StyleSheet.create({
     container: {
-        width: Dimensions.get("window").width - 32, // Full width minus padding/margin
+        padding: 16,
         backgroundColor: "#EDEFF7",
         borderRadius: 8,
-        padding: 16,
-        marginHorizontal: 16, // Center the widget
-        //marginBottom: 16,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 2,
+        margin: 16,
     },
     title: {
         fontSize: 20,
@@ -67,32 +56,42 @@ const styles = StyleSheet.create({
         color: "#4B225F",
         marginBottom: 12,
     },
+    category: {
+        marginBottom: 16,
+    },
+    categoryTitle: {
+        fontSize: 16,
+        fontWeight: "bold",
+        color: "#4B225F",
+    },
     taskItem: {
-        marginBottom: 10,
-        padding: 10,
-        backgroundColor: "#A0D8B3", // Mint green background for individual tasks
+        backgroundColor: "#A0D8B3",
         borderRadius: 8,
+        padding: 10,
+        marginTop: 8,
     },
     taskName: {
         fontSize: 16,
-        fontWeight: "bold",
-        color: "#4B225F", // Dark text for mint background
-        marginBottom: 4,
+        color: "#4B225F",
     },
-    taskCategory: {
-        fontSize: 14,
-        color: "#4B225F", // Dark text for category
-        marginBottom: 4,
-    },
-    taskDate: {
-        fontSize: 14,
-        color: "#4B225F", // Dark text for deadline
-    },
-    noTasks: {
+    taskDeadline: {
         fontSize: 14,
         color: "#4B225F",
+    },
+    loading: {
         textAlign: "center",
-        marginTop: 10,
+        fontSize: 16,
+        color: "#4B225F",
+    },
+    error: {
+        textAlign: "center",
+        fontSize: 16,
+        color: "red",
+    },
+    noTasks: {
+        textAlign: "center",
+        fontSize: 16,
+        color: "#4B225F",
     },
 });
 
