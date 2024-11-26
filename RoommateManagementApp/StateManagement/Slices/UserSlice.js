@@ -42,6 +42,26 @@ export const signUp = createAsyncThunk(
     }
 );
 
+export const saveFCMToken = createAsyncThunk(
+    "user/saveFCMToken",
+    async ({ uid, fcmToken }, { rejectWithValue }) => {
+        try {
+            const userDocRef = doc(db, "users", uid);
+
+            // Update the document, merging the fcmToken into an array
+            await updateDoc(userDocRef, {
+                fcmToken: fcmToken,
+            });
+
+            console.log("FCM token saved:", fcmToken);
+            return fcmToken;
+        } catch (error) {
+            console.error("Failed to save FCM token:", error);
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 // Thunk to fetch user details from Firestore
 export const fetchUserDetails = createAsyncThunk(
     "user/fetchUserDetails",
@@ -73,7 +93,7 @@ export const fetchRoommateDetails = createAsyncThunk(
     async ({ uid, groupID }, { rejectWithValue }) => {
         try {
             console.log(`Fetching roommate details for group: ${groupID}`);
-            
+
             // Reference to the group document
             const groupRef = doc(db, "groups", groupID);
             const groupSnapshot = await getDoc(groupRef);
@@ -118,7 +138,6 @@ export const fetchRoommateDetails = createAsyncThunk(
     }
 );
 
-
 const userSlice = createSlice({
     name: "user",
     initialState: {
@@ -130,6 +149,7 @@ const userSlice = createSlice({
     },
     reducers: {
         setId: (state, action) => {
+            console.log("Setting ID:", action.payload);
             state.id = action.payload;
         },
         logout: (state) => {

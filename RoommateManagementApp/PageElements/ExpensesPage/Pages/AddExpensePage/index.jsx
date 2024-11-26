@@ -22,7 +22,7 @@ const AddExpenseScreen = () => {
     const dispatch = useDispatch();
     const membersData = useSelector((state) => state.user.roommates);
     const groupID = useSelector((state) => state.user.groupID);
-    const userID = useSelector((state)=>{state.user.id})
+    const userID = useSelector((state)=>state.user.id)
     const [amount, setAmount] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [splitModalVisible, setSplitModalVisible] = useState(false);
@@ -31,7 +31,7 @@ const AddExpenseScreen = () => {
     const [splitType, setSplitType] = useState('equally');
     const [description, setDescription] = useState('');
 
-    console.log("expense groupID", groupID);
+    console.log("ID",userID);
 
     useEffect(() => {
         if (selectedMembers.length > 0) {
@@ -77,18 +77,19 @@ const AddExpenseScreen = () => {
         }
 
         console.log("Creating expense for groupID:", groupID)
-        console.log(splitPercentages, selectedMembers)
+        console.log("userid", userID)
 
         const { You, ...rest } = splitPercentages;
-        splitPercentages = { ...rest, userID: You };
+        const augSplitPercentages = { ...rest, [userID]: You };
 
         const expenseData = {
             description,
             amount: parseFloat(amount),
-            splitPercentages: splitPercentages,
+            splitPercentages: augSplitPercentages,
             splitType,
             date: new Date().toLocaleDateString(),
-            members: selectedMembers.map((id)=> (id=="You")?userID: id),
+            members: selectedMembers.map((id)=> (id=="You")? userID: id),
+            paidBy: userID,
         };
 
         dispatch(addExpenseToDB({ groupID, expense: expenseData }));
