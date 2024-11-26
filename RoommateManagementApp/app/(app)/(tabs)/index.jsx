@@ -54,7 +54,7 @@ export default function HomePage() {
                 </View>
 
                 {/* Row 4: Expenses widget */}
-                <View style={[styles.row, styles.mb]}>
+                {/* <View style={[styles.row, styles.mb]}>
                     <FeatureTile
                         flex={1}
                         bgColor="#007BFF" // blue
@@ -62,7 +62,7 @@ export default function HomePage() {
                         TileComponent={ExpensesWidget}
                         onPress={() => {router.navigate('SharedExpenses')}}
                     />
-                </View>
+                </View> */}
 
                 {/* Row 4: Two tiles, one 2/3 width, the other 1/3 */}
                 <View style={[styles.row, styles.mbLast]}>

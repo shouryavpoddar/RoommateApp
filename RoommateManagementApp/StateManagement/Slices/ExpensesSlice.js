@@ -19,11 +19,15 @@ export const fetchExpensesFromDB = createAsyncThunk(
 
             const expenses = [];
             const expensesRef = collection(db, `groups/${groupID}/expenses`);
+            console.log("Expense ref received: ", expensesRef)
             const snapshot = await getDocs(expensesRef);
-
+            console.log("Snapshot received: ", snapshot)
             snapshot.forEach((doc) => {
+                console.log("Foreaching - current doc is:", doc)
                 const expense = doc.data();
-                expenses.push({ id: doc.id, ...expense });
+                const transformedExpense = transformExpense(expense)
+                console.log("added expense to list", transformExpense)
+                expenses.push({ id: doc.id, ...transformedExpense });
             });
 
             return { expenses, groupID };
@@ -37,23 +41,24 @@ export const fetchExpensesFromDB = createAsyncThunk(
 // Thunk to add expenses to Firebase and update the state
 export const addExpenseToDB = createAsyncThunk(
     'expenses/addExpenseToDB',
-    async ({ groupID, expense }, { rejectWithValue, dispatch }) => {
+    async ({ groupID, expense }, { rejectWithValue }) => {
         try {
             if (!groupID) throw new Error('Group ID is undefined. Cannot create expense.');
 
-            const newExpenses = transformExpense({ ...expense });
-
-            // Store the expenses in Firebase
+            console.log("Passed group id check")
+            // Prepare the expenses reference in Firebase
             const expensesRef = collection(db, `groups/${groupID}/expenses`);
-            const batch = newExpenses.map(exp => {
-                const expenseData = { ...exp }; // Do not include the `id`, let Firestore handle it
-                return setDoc(doc(expensesRef), expenseData); // Firestore will generate a unique ID
-            });
 
-            await Promise.all(batch); // Commit all expenses to Firebase
+            console.log("passed collection access")
+            // Store the expense in Firebase, where Firestore will generate a unique ID for the document
+            const newExpenseRef = doc(expensesRef);
 
-            // Return transformed expenses to update the state
-            return { newExpenses, groupID };
+            console.log("got new expense ref")
+            await setDoc(newExpenseRef, expense); // Add the expense data to Firestore
+
+            console.log("set doc")
+            // Return the expense data along with the groupID to update the state
+            return { expense, groupID };
         } catch (error) {
             console.error('Failed to add expense to DB:', error.message);
             return rejectWithValue(error.message);
@@ -103,7 +108,7 @@ const expensesSlice = createSlice({
             })
             // Add Expense to DB
             .addCase(addExpenseToDB.fulfilled, (state, action) => {
-                state.expenses.push(...action.payload.newExpenses); // Add new expenses to state
+                state.expenses.push(action.payload.newExpenses); // Add new expenses to state
                 state.loading = false;
                 state.error = null;
             })
@@ -133,6 +138,7 @@ const expensesSlice = createSlice({
 
 // Helper function to transform expenses for friends
 function transformExpense(expense) {
+    console.log("transforming expense", expense)
     const friendIds = expense.members.filter((member) => member !== 'You'); // Exclude "You"
 
     return friendIds.map((friendId, index) => {

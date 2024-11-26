@@ -4,8 +4,9 @@ import { useSelector } from "react-redux";
 
 const ExpensesWiget = () => {
     const expenses = useSelector((state) => state.expenses.expenses);
-
-    const totalBalances = expenses.reduce(
+    const goh = expenses.map((object)=>object[Object.keys(object)[0]])
+    console.log("expenses",goh);
+    const totalBalances = goh.reduce(
         (totals, expense) => {
             if (expense.type === 'lent') {
                 totals.youAreOwed += expense.amount;

@@ -1,7 +1,6 @@
 import React, { useEffect, useLayoutEffect } from 'react';
 import { FlatList, TouchableOpacity, StyleSheet, View, Text } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchExpensesFromDB } from '@/StateManagement/Slices/ExpensesSlice';
+import { useSelector } from 'react-redux';
 import ExpensesWiget from "@/PageElements/ExpensesPage/Pages/FriendsPage/PageLayout/Components/ExpensesWidget";
 import Layout from "@/PageElements/ExpensesPage/Pages/FriendsPage/PageLayout";
 import renderFriend from "@/PageElements/ExpensesPage/Pages/FriendsPage/PageLayout/Components/FriendTile";
@@ -10,14 +9,9 @@ import { useNavigation, useRouter } from "expo-router";
 
 const FriendsScreen = () => {
     const navigation = useNavigation();
-    const dispatch = useDispatch();
     const router = useRouter();
-    // const friends = useSelector((state) => state.expenses.friends);
-    // const expenses = useSelector((state) => state.expenses.expenses);
 
     // Redux state for group ID and tasks
-    const groupID = useSelector((state) => state.user.groupID);
-    // const tasks = useSelector((state) => state.calendar.tasks);
     const friends = useSelector((state) => state.user.roommates);
     const expenses = useSelector((state) => state.expenses.expenses);
     const loading = useSelector((state) => state.expenses.loading);
@@ -54,17 +48,6 @@ const FriendsScreen = () => {
 
         return unsubscribe;
     }, [navigation, router]);
-
-    // Fetch tasks when the groupID is available or changes
-    useEffect(() => {
-        if (groupID) {
-            console.log("Fetching expenses for groupID:", groupID);
-            dispatch(fetchExpensesFromDB({ groupID }));
-        }
-        else {
-            console.log("Expenses not fetched b/c no group id");
-        }
-    }, [groupID, dispatch]);
 
     if (loading) return <Layout><Text>Loading tasks...</Text></Layout>;
     if (error) return <Layout><Text>Error: {error}</Text></Layout>;
