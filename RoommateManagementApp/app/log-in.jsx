@@ -27,9 +27,11 @@ const LoginPage = () => {
             const uid = userCredential.user.uid; // Get user's unique ID
             dispatch(setId(uid));
 
+
             console.log("User logged in with UID:", uid);
 
             // Fetch user details and update Redux state
+
             const userDetails = await dispatch(fetchUserDetails(uid)).unwrap();
             console.log("User details fetched and stored in Redux.");
 
