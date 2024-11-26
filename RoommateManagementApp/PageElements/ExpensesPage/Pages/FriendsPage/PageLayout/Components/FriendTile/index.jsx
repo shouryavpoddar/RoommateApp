@@ -8,7 +8,7 @@ const renderFriend = ({ item, onPress }) => (
         style={styles.friendContainer}
     >
         <View>
-            <Text style={styles.friendName}>{item.name}</Text>
+            <Text style={styles.friendName}>{item.username}</Text>
             <Text style={styles.balanceText}>Balance: ${item.balance}</Text>
             {(item.transactions || []).slice(0, 2).map((transaction, index) => (
                 <Text key={index} style={styles.transactionText}>

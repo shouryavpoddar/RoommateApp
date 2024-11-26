@@ -67,12 +67,65 @@ export const fetchUserDetails = createAsyncThunk(
 );
 
 
+// Thunk to fetch roommates from Firestore
+export const fetchRoommateDetails = createAsyncThunk(
+    "user/fetchRoommateDetails",
+    async ({ uid, groupID }, { rejectWithValue }) => {
+        try {
+            console.log(`Fetching roommate details for group: ${groupID}`);
+            
+            // Reference to the group document
+            const groupRef = doc(db, "groups", groupID);
+            const groupSnapshot = await getDoc(groupRef);
+
+            if (!groupSnapshot.exists()) {
+                throw new Error("Group not found.");
+            }
+
+            // Fetch group members
+            const groupData = groupSnapshot.data();
+            const members = groupData.members || [];
+
+            console.log(`Group members: ${members}`);
+
+            // Exclude the current user from roommates
+            const roommateIDs = members.filter((memberUID) => memberUID !== uid);
+
+            // Fetch details for each roommate
+            const roommateDetails = await Promise.all(
+                roommateIDs.map(async (roommateUID) => {
+                    const roommateRef = doc(db, "users", roommateUID);
+                    const roommateSnapshot = await getDoc(roommateRef);
+
+                    if (roommateSnapshot.exists()) {
+                        // Return only the uid and username (name) of each roommate
+                        const { username } = roommateSnapshot.data(); // assuming "username" is the name field
+                        return { id: roommateUID, username }; // only store the name and id
+                    } else {
+                        console.warn(`Roommate with UID ${roommateUID} not found.`);
+                        return null;
+                    }
+                })
+            );
+
+            // Filter out any null entries (roommates not found)
+            const validRoommates = roommateDetails.filter(Boolean);
+            return validRoommates;
+        } catch (error) {
+            console.error("Failed to fetch roommate details:", error);
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+
 const userSlice = createSlice({
     name: "user",
     initialState: {
         id: null,
         username: null,
         groupID: null,
+        roommates: [],
         error: null,
     },
     reducers: {
@@ -104,8 +157,19 @@ const userSlice = createSlice({
                 state.username = username;
                 state.groupID = groupID;
                 state.error = null;
+                console.log("Group id set", state.groupID)
+                // fetchRoommateDetailsfetchRoommateDetails({ uid, groupID: updatedGroupID })
             })
             .addCase(fetchUserDetails.rejected, (state, action) => {
+                state.error = action.payload;
+            })
+            //handle fetching roommate group details
+            .addCase(fetchRoommateDetails.fulfilled, (state, action) => {
+                state.roommates = action.payload;
+                console.log("Roommates fetched: ", state.roommates)
+                state.error = null;
+            })
+            .addCase(fetchRoommateDetails.rejected, (state, action) => {
                 state.error = action.payload;
             });
     },
