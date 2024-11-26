@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import FeatureTile from "@/PageElements/HomePage/Components/FeatureTile";
 import Updates from "@/PageElements/HomePage/Components/RecentUpdates";
@@ -7,9 +7,30 @@ import EmergencyHomeWidget from '@/PageElements/EmergencyNotificationsPage/Compo
 import ExpensesWidget from '@/PageElements/ExpensesPage/Pages/FriendsPage/PageLayout/Components/ExpensesWidget'
 import TaskBoardWidget from '@/PageElements/TaskBoardPage/PageLayout/Components/TaskBoardWidget';
 import {useRouter} from "expo-router";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchExpensesFromDB } from '@/StateManagement/Slices/ExpensesSlice';
+
 
 export default function HomePage() {
     const router = useRouter();
+    const dispatch = useDispatch();
+    const groupID = useSelector((state) => state.user.groupID);
+    const expenses = useSelector((state) => state.expenses.expenses);
+
+
+    //home page fetching if needed for widgets
+    // Fetch tasks when the groupID is available or changes
+    useEffect(() => {
+        if (groupID && (!expenses || expenses.length === 0)) {
+            console.log("Initial fetch of expenses for home page widget with groupID:", groupID);
+            dispatch(fetchExpensesFromDB({ groupID }));
+        }
+        else {
+            console.log("Expenses not fetched b/c no group id - home page");
+        }
+    }, [groupID, dispatch]);
+
+
 
     return (
         <View style={styles.container}>
@@ -54,7 +75,7 @@ export default function HomePage() {
                 </View>
 
                 {/* Row 4: Expenses widget */}
-                {/* <View style={[styles.row, styles.mb]}>
+                <View style={[styles.row, styles.mb]}>
                     <FeatureTile
                         flex={1}
                         bgColor="#007BFF" // blue
@@ -62,7 +83,7 @@ export default function HomePage() {
                         TileComponent={ExpensesWidget}
                         onPress={() => {router.navigate('SharedExpenses')}}
                     />
-                </View> */}
+                </View>
 
                 {/* Row 4: Two tiles, one 2/3 width, the other 1/3 */}
                 <View style={[styles.row, styles.mbLast]}>

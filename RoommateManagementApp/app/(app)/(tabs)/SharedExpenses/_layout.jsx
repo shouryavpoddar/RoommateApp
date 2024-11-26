@@ -12,7 +12,7 @@ export default function SharedExpensesLayout() {
     // Fetch tasks when the groupID is available or changes
     useEffect(() => {
         if (groupID) {
-            console.log("Fetching expenses for groupID:", groupID);
+            console.log("***********************************Fetching expenses for groupID", groupID);
             dispatch(fetchExpensesFromDB({ groupID }));
         }
         else {
