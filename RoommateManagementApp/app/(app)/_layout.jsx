@@ -24,7 +24,7 @@ export default function RootLayout() {
         const token = await messaging().getToken();
         dispatch(saveFCMToken({ uid: id, fcmToken: token }));
       } catch (error) {
-        console.error("Error fetching FCM token:", error);
+        // console.error("Error fetching FCM token:", error);
       }
     };
     fetchFCMToken();
@@ -73,23 +73,23 @@ export default function RootLayout() {
 
   if (initializing) {
     return (
-      <View
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          flex: 1,
-        }}
-      >
-        <ActivityIndicator size="large" />
-      </View>
+        <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              flex: 1,
+            }}
+        >
+          <ActivityIndicator size="large" />
+        </View>
     );
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      {/* <Stack.Screen name="../../PageElements/TesterPage/index" options={{ title: 'Tester Page' }} /> */}
-      <Stack.Screen name="+not-found" />
-    </Stack>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        {/* <Stack.Screen name="../../PageElements/TesterPage/index" options={{ title: 'Tester Page' }} /> */}
+        <Stack.Screen name="+not-found" />
+      </Stack>
   );
 }
