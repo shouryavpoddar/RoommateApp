@@ -1,93 +1,136 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { db } from "@/firebase.config";
-import { doc, collection, setDoc, updateDoc, deleteDoc, getDocs } from "firebase/firestore";
+import {doc, collection, setDoc, deleteDoc, getDocs, updateDoc, getDoc} from "firebase/firestore";
 import uuid from "react-native-uuid";
 
-// Initial state
 const initialState = {
-    categories: {}, // Categories with tasks from Firebase
+    categories: {}, // Categories with tasks fetched from Firebase
     loading: false,
     error: null,
 };
 
-// Thunk to fetch all tasks for a group
-export const fetchTasksFromDB = createAsyncThunk(
-    "taskBoard/fetchTasksFromDB",
+// Fetch all categories from the backend
+export const fetchCategoriesFromDB = createAsyncThunk(
+    "taskBoard/fetchCategoriesFromDB",
     async ({ groupID }, { rejectWithValue }) => {
         try {
-            if (!groupID) throw new Error("Group ID is required to fetch tasks.");
+            if (!groupID) throw new Error("Group ID is required to fetch categories.");
 
             const categories = {};
-            const tasksRef = collection(db, `groups/${groupID}/tasks`);
-            const snapshot = await getDocs(tasksRef);
+            const categoriesRef = collection(db, `groups/${groupID}/categories`);
+            const snapshot = await getDocs(categoriesRef);
 
             snapshot.forEach((doc) => {
-                const task = doc.data();
-                const category = task.category || "Uncategorized";
-                if (!categories[category]) categories[category] = [];
-                categories[category].push({ id: doc.id, ...task });
+                const categoryData = doc.data();
+                const categoryName = categoryData.name;
+                categories[categoryName] = categoryData.tasks || [];
             });
 
             return { categories };
         } catch (error) {
-            console.error("Error fetching tasks:", error.message);
+            console.error("Error fetching categories:", error.message);
             return rejectWithValue(error.message);
         }
     }
 );
 
-// Thunk to add a new task
-export const addTaskToDB = createAsyncThunk(
-    "taskBoard/addTaskToDB",
-    async ({ groupID, category, task }, { rejectWithValue }) => {
+// Add a new task to a category
+export const addTaskToCategoryDB = createAsyncThunk(
+    "taskBoard/addTaskToCategoryDB",
+    async ({ groupID, categoryName, task }, { rejectWithValue }) => {
         try {
-            if (!groupID) throw new Error("Group ID is required to add a task.");
+            if (!groupID || !categoryName) throw new Error("Group ID and category name are required.");
 
             const taskID = uuid.v4();
-            const taskData = { ...task, id: taskID, category };
+            const taskData = { ...task, id: taskID };
 
-            const tasksRef = collection(db, `groups/${groupID}/tasks`);
-            await setDoc(doc(tasksRef, taskID), taskData);
+            const categoryRef = doc(db, `groups/${groupID}/categories/${categoryName}`);
+            const categorySnapshot = await getDoc(categoryRef);
+            const category = categorySnapshot.exists() ? categorySnapshot.data() : { tasks: [] };
 
-            return { category, task: taskData };
+            const updatedTasks = [...category.tasks, taskData];
+            await setDoc(categoryRef, { name: categoryName, tasks: updatedTasks });
+
+            return { categoryName, task: taskData };
         } catch (error) {
-            console.error("Error adding task:", error.message);
+            console.error("Error adding task to category:", error.message);
             return rejectWithValue(error.message);
         }
     }
 );
 
-// Thunk to edit a task
-export const editTaskInDB = createAsyncThunk(
-    "taskBoard/editTaskInDB",
-    async ({ groupID, taskId, updatedTask }, { rejectWithValue }) => {
+// Edit a task in a category
+export const editTaskInCategoryDB = createAsyncThunk(
+    "taskBoard/editTaskInCategoryDB",
+    async ({ groupID, categoryName, taskId, updatedTask }, { rejectWithValue }) => {
         try {
-            if (!groupID || !taskId) throw new Error("Group ID and Task ID are required to edit a task.");
+            console.log("Editing task in category:", { groupID, categoryName, taskId, updatedTask });
+            if (!groupID || !categoryName || !taskId) {
+                throw new Error("Group ID, category name, and task ID are required.");
+            }
 
-            const taskRef = doc(db, `groups/${groupID}/tasks/${taskId}`);
-            await updateDoc(taskRef, updatedTask);
+            const categoryRef = doc(db, `groups/${groupID}/categories/${categoryName}`);
+            const categorySnapshot = await getDoc(categoryRef);
 
-            return { taskId, updatedTask };
+            if (!categorySnapshot.exists()) throw new Error("Category does not exist.");
+
+            const category = categorySnapshot.data();
+            const updatedTasks = category.tasks.map((task) =>
+                task.id === taskId ? { ...task, ...updatedTask } : task
+            );
+
+            await setDoc(categoryRef, { name: categoryName, tasks: updatedTasks });
+
+            return { categoryName, taskId, updatedTask };
         } catch (error) {
-            console.error("Error editing task:", error.message);
+            console.error("Error editing task in category:", error.message);
             return rejectWithValue(error.message);
         }
     }
 );
 
-// Thunk to delete a task
-export const deleteTaskFromDB = createAsyncThunk(
-    "taskBoard/deleteTaskFromDB",
-    async ({ groupID, taskId }, { rejectWithValue }) => {
+// Delete a task from a category
+export const deleteTaskFromCategoryDB = createAsyncThunk(
+    "taskBoard/deleteTaskFromCategoryDB",
+    async ({ groupID, categoryName, taskId }, { rejectWithValue }) => {
         try {
-            if (!groupID || !taskId) throw new Error("Group ID and Task ID are required to delete a task.");
+            if (!groupID || !categoryName || !taskId) {
+                throw new Error("Group ID, category name, and task ID are required.");
+            }
 
-            const taskRef = doc(db, `groups/${groupID}/tasks/${taskId}`);
-            await deleteDoc(taskRef);
+            const categoryRef = doc(db, `groups/${groupID}/categories/${categoryName}`);
+            const categorySnapshot = await getDoc(categoryRef);
 
-            return taskId;
+            if (!categorySnapshot.exists()) throw new Error("Category does not exist.");
+
+            const category = categorySnapshot.data();
+            const updatedTasks = category.tasks.filter((task) => task.id !== taskId);
+
+            await setDoc(categoryRef, { name: categoryName, tasks: updatedTasks });
+
+            return { categoryName, taskId };
         } catch (error) {
-            console.error("Error deleting task:", error.message);
+            console.error("Error deleting task from category:", error.message);
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+// Add a new category
+export const addCategoryToDB = createAsyncThunk(
+    "taskBoard/addCategoryToDB",
+    async ({ groupID, categoryName }, { rejectWithValue }) => {
+        try {
+            if (!groupID || !categoryName) throw new Error("Group ID and category name are required.");
+
+            const categoryRef = doc(db, `groups/${groupID}/categories/${categoryName}`);
+            const categoryData = { name: categoryName, tasks: [] };
+
+            await setDoc(categoryRef, categoryData);
+
+            return { categoryName };
+        } catch (error) {
+            console.error("Error adding category:", error.message);
             return rejectWithValue(error.message);
         }
     }
@@ -96,90 +139,88 @@ export const deleteTaskFromDB = createAsyncThunk(
 const taskBoardSlice = createSlice({
     name: "taskBoard",
     initialState,
-    reducers: {
-        // Add new category locally
-        addCategoryLocally: (state, action) => {
-            const { categoryName } = action.payload;
-            if (!state.categories[categoryName]) {
-                state.categories[categoryName] = [];
-            }
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
-            // Fetch Tasks
-            .addCase(fetchTasksFromDB.fulfilled, (state, action) => {
+            // Fetch Categories
+            .addCase(fetchCategoriesFromDB.fulfilled, (state, action) => {
                 state.categories = action.payload.categories;
                 state.loading = false;
                 state.error = null;
             })
-            .addCase(fetchTasksFromDB.pending, (state) => {
+            .addCase(fetchCategoriesFromDB.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(fetchTasksFromDB.rejected, (state, action) => {
+            .addCase(fetchCategoriesFromDB.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })
             // Add Task
-            .addCase(addTaskToDB.fulfilled, (state, action) => {
-                const { category, task } = action.payload;
-                if (!state.categories[category]) state.categories[category] = [];
-                state.categories[category].push(task);
+            .addCase(addTaskToCategoryDB.fulfilled, (state, action) => {
+                const { categoryName, task } = action.payload;
+                if (!state.categories[categoryName]) state.categories[categoryName] = [];
+                state.categories[categoryName].push(task);
                 state.loading = false;
                 state.error = null;
             })
-            .addCase(addTaskToDB.pending, (state) => {
+            .addCase(addTaskToCategoryDB.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(addTaskToDB.rejected, (state, action) => {
+            .addCase(addTaskToCategoryDB.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })
             // Edit Task
-            .addCase(editTaskInDB.fulfilled, (state, action) => {
-                const { taskId, updatedTask } = action.payload;
-                const category = updatedTask.category || "Uncategorized";
-
-                Object.keys(state.categories).forEach((cat) => {
-                    const taskIndex = state.categories[cat]?.findIndex((task) => task.id === taskId);
-                    if (taskIndex !== -1) {
-                        state.categories[cat][taskIndex] = {
-                            ...state.categories[cat][taskIndex],
-                            ...updatedTask,
-                        };
-                    }
-                });
+            .addCase(editTaskInCategoryDB.fulfilled, (state, action) => {
+                const { categoryName, taskId, updatedTask } = action.payload;
+                const categoryTasks = state.categories[categoryName] || [];
+                const taskIndex = categoryTasks.findIndex((task) => task.id === taskId);
+                if (taskIndex !== -1) {
+                    categoryTasks[taskIndex] = { ...categoryTasks[taskIndex], ...updatedTask };
+                }
                 state.loading = false;
                 state.error = null;
             })
-            .addCase(editTaskInDB.pending, (state) => {
+            .addCase(editTaskInCategoryDB.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(editTaskInDB.rejected, (state, action) => {
+            .addCase(editTaskInCategoryDB.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })
             // Delete Task
-            .addCase(deleteTaskFromDB.fulfilled, (state, action) => {
-                const taskId = action.payload;
-
-                Object.keys(state.categories).forEach((category) => {
-                    state.categories[category] = state.categories[category]?.filter(
-                        (task) => task.id !== taskId
-                    );
-                });
+            .addCase(deleteTaskFromCategoryDB.fulfilled, (state, action) => {
+                const { categoryName, taskId } = action.payload;
+                state.categories[categoryName] = state.categories[categoryName].filter(
+                    (task) => task.id !== taskId
+                );
                 state.loading = false;
                 state.error = null;
             })
-            .addCase(deleteTaskFromDB.pending, (state) => {
+            .addCase(deleteTaskFromCategoryDB.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(deleteTaskFromDB.rejected, (state, action) => {
+            .addCase(deleteTaskFromCategoryDB.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            // Add Category
+            .addCase(addCategoryToDB.fulfilled, (state, action) => {
+                const { categoryName } = action.payload;
+                if (!state.categories[categoryName]) {
+                    state.categories[categoryName] = [];
+                }
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(addCategoryToDB.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(addCategoryToDB.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             });
     },
 });
 
-export const { addCategoryLocally } = taskBoardSlice.actions;
 export default taskBoardSlice.reducer;

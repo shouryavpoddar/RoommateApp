@@ -1,73 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { useSelector } from 'react-redux';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from "expo-router";
-import { editTaskInDB } from '../../../../StateManagement/Slices/TaskBoardSlice';
 import EditTaskModal from '../../PageLayout/Components/EditTaskModal';
 
 const ShowAllTasks = ({ groupID }) => {
-    const categories = useSelector((state) => state.taskBoard.categories); // Fetch categories from Redux
-    const dispatch = useDispatch();
+    const categories = useSelector((state) => state.taskBoard.categories);
+    const currentUser = useSelector((state) => state.user.id); // Get the current user's ID
     const router = useRouter();
 
     const [selectedTask, setSelectedTask] = useState(null);
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [userTasks, setUserTasks] = useState([]);
-    const [isSorted, setIsSorted] = useState(false); // Track sorting state
+    const [isSorted, setIsSorted] = useState(false);
 
-    // Dynamically fetch tasks assigned to "You" whenever categories change
+
+    function findCategoryNameForTask(categories, taskId) {
+        // Iterate over each category in the categories object
+        for (const [categoryName, tasks] of Object.entries(categories)) {
+            // Check if the task exists in the tasks array
+            const taskExists = tasks.some(task => task.id === taskId);
+            if (taskExists) {
+                return categoryName; // Return the category name if task is found
+            }
+        }
+        // Return null if no category contains the task
+        return null;
+    }
+    // Dynamically fetch tasks assigned to the current user whenever categories change
     useEffect(() => {
-        const tasks = categories.flatMap((category) =>
-            category.tasks
-                .filter((task) => task.assignedTo?.toLowerCase() === 'you') // Filter tasks assigned to "You"
-                .map((task) => ({ ...task, categoryName: category.name })) // Add category reference
+        const tasks = Object.entries(categories).flatMap(([categoryName, tasks]) =>
+            tasks
+                .filter((task) => task.assignedTo === currentUser) // Filter tasks assigned to the current user
+                .map((task) => ({ ...task, categoryName })) // Add category reference
         );
         setUserTasks(sortByDefault(tasks)); // Initialize with default sort
-    }, [categories]);
+    }, [categories, currentUser]);
 
-    // Default sorting: Pending first, then Done
+    // Default sorting: Pending tasks first, then Done
     const sortByDefault = (tasks) => {
         const pendingTasks = tasks.filter((task) => task.status !== 'done');
         const doneTasks = tasks.filter((task) => task.status === 'done');
         return [...pendingTasks, ...doneTasks];
     };
 
-    // Sort by Deadline
+    // Sort tasks by Deadline
     const sortByDeadline = () => {
         const tasksWithDeadline = [...userTasks].filter((task) => task.deadline);
         const tasksWithoutDeadline = [...userTasks].filter((task) => !task.deadline);
 
-        // Sort tasks with deadlines in ascending order
         tasksWithDeadline.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
 
-        setUserTasks([...tasksWithDeadline, ...tasksWithoutDeadline]); // Append tasks without deadlines at the end
-        setIsSorted(true); // Indicate that tasks are sorted
+        setUserTasks([...tasksWithDeadline, ...tasksWithoutDeadline]);
+        setIsSorted(true);
     };
 
-    // Unsort and return to default format
+    // Reset tasks to the default sorting
     const unsortTasks = () => {
-        setUserTasks(sortByDefault(userTasks)); // Reset to default sorting
-        setIsSorted(false); // Indicate that tasks are unsorted
-    };
-
-    // Handle editing tasks
-    const handleEditTask = async (updatedTask) => {
-        if (!groupID) {
-            Alert.alert("Error", "Group ID is undefined. Cannot update task.");
-            return;
-        }
-
-        try {
-            await dispatch(editTaskInDB({
-                groupID,
-                date: updatedTask.deadline,
-                taskId: updatedTask.id,
-                updatedTask
-            })).unwrap();
-            setIsEditModalVisible(false);
-        } catch (error) {
-            Alert.alert("Error", error.message || "Failed to update task.");
-        }
+        setUserTasks(sortByDefault(userTasks));
+        setIsSorted(false);
     };
 
     return (
@@ -112,10 +103,9 @@ const ShowAllTasks = ({ groupID }) => {
                 <EditTaskModal
                     visible={isEditModalVisible}
                     task={selectedTask}
-                    category={{ name: selectedTask.categoryName }}
-                    groupID={groupID} // Pass groupID to modal
+                    categoryName={findCategoryNameForTask(categories, selectedTask.id)}
+                    groupID={groupID}
                     onClose={() => setIsEditModalVisible(false)}
-                    onSave={handleEditTask}
                 />
             )}
         </View>

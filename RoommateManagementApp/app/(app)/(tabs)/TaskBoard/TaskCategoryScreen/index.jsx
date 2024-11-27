@@ -5,27 +5,29 @@ import { useEffect } from "react";
 import TaskCategoryPage from '@/PageElements/TaskBoardPage/Pages/TaskCategoryPage';
 
 export default function TaskCategoryScreen() {
-    const { categoryName } = useLocalSearchParams();
-    const dispatch = useDispatch();
+    const { categoryName } = useLocalSearchParams(); // Extract category name from route params
     const navigation = useNavigation();
+    const categories = useSelector((state) => state.taskBoard.categories); // Fetch categories from Redux
+    const groupID = useSelector((state) => state.user.groupID); // Fetch group ID
 
-
-    const categories = useSelector((state) => state.taskBoard.categories);
-    const category = categories.find(cat => cat.name === categoryName)
+    const categoryTasks = categories[categoryName] || []; // Get tasks for the category
 
     useEffect(() => {
-        if (category) {
-            console.log(`Category name is ${category.name}`)
+        if (categoryName) {
+            console.log(`Category name is ${categoryName}`);
             navigation.setOptions({
-                title: category.name
-            })
+                title: categoryName, // Update navigation title
+            });
+        } else {
+            console.log("No category selected...");
         }
-        else{
-            console.log("No category...")
-        }
-    })
+    }, [categoryName, navigation]);
 
     return (
-        <TaskCategoryPage category={category}/>
+        <TaskCategoryPage
+            categoryName={categoryName}
+            groupID={groupID}
+            tasks={categoryTasks}
+        />
     );
 }

@@ -5,10 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6b4ae8f6-2241-453b-9437-feabb8f02d5f" name="Changes" comment="Created Tabs">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_16_24,_4_15 PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_16_24__4_15PM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/TaskBoardPage/PageLayout/Components/AddCategoryModal/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/TaskBoardPage/PageLayout/Components/AddCategoryModal/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/TaskBoardPage/PageLayout/Components/AddTaskModal/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/TaskBoardPage/PageLayout/Components/AddTaskModal/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/TaskBoardPage/PageLayout/Components/EditTaskModal/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/TaskBoardPage/PageLayout/Components/EditTaskModal/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/TaskBoardPage/Pages/ShowAllTasks/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/TaskBoardPage/Pages/ShowAllTasks/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/TaskBoardPage/Pages/TaskCategoryPage/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/TaskBoardPage/Pages/TaskCategoryPage/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/StateManagement/Slices/TaskBoardSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/StateManagement/Slices/TaskBoardSlice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/StateManagement/Slices/UserSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/StateManagement/Slices/UserSlice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/(tabs)/TaskBoard/TaskCategoryScreen/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/(tabs)/TaskBoard/TaskCategoryScreen/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/(tabs)/TaskBoard/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/(tabs)/TaskBoard/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/app/log-in.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/app/log-in.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +36,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="expenses-backend" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -97,7 +104,7 @@
       <recent name="$PROJECT_DIR$/roommate-app/src/Pages/Calander/PageLayout/Components" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="npm.start">
     <configuration name="Android" type="ReactNative" factoryName="React Native" singleton="false">
       <node-interpreter value="project" />
       <react-native value="$PROJECT_DIR$/roommate-app/node_modules/react-native" />

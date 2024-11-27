@@ -1,43 +1,81 @@
-import React from 'react';
-import { View, ScrollView, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, ScrollView, TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSelector, useDispatch } from 'react-redux';
-import { addCategory } from '@/StateManagement/Slices/TaskBoardSlice'; 
+import { fetchCategoriesFromDB, addCategoryToDB } from '@/StateManagement/Slices/TaskBoardSlice';
 import AddCategoryModal from '@/PageElements/TaskBoardPage/PageLayout/Components/AddCategoryModal';
 
 const TaskBoardPage = () => {
     const categories = useSelector((state) => state.taskBoard.categories); // Fetch categories from Redux
+    const loading = useSelector((state) => state.taskBoard.loading); // Loading state
+    const error = useSelector((state) => state.taskBoard.error); // Error state
+    const groupID = useSelector((state) => state.user.groupID); // Fetch group ID from Redux
     const dispatch = useDispatch();
     const router = useRouter();
-    const [isAddCategoryModalVisible, setIsAddCategoryModalVisible] = React.useState(false); // Local state for modal visibility
+    const [isAddCategoryModalVisible, setIsAddCategoryModalVisible] = useState(false); // Local state for modal visibility
 
-    const handleAddCategory = (newCategoryName) => {
-        if (newCategoryName.trim()) {
-            dispatch(addCategory({ categoryName: newCategoryName })); // Dispatch Redux action to add a category
-        } else {
-            alert('Category name cannot be empty!');
+    // Fetch tasks from the backend when the component mounts
+    useEffect(() => {
+        if (groupID) {
+            dispatch(fetchCategoriesFromDB({ groupID }));
         }
-        setIsAddCategoryModalVisible(false); // Close the modal after adding
+    }, [groupID, dispatch]);
+
+    const handleAddCategory = async (newCategoryName) => {
+        if (!newCategoryName.trim()) {
+            alert('Category name cannot be empty!');
+            return;
+        }
+
+        if (!groupID) {
+            alert('Group ID is missing. Cannot add category.');
+            return;
+        }
+
+        try {
+            await dispatch(addCategoryToDB({ groupID, categoryName: newCategoryName })).unwrap();
+            alert(`Category "${newCategoryName}" has been added.`);
+        } catch (error) {
+            console.error('Error adding category:', error);
+            alert('Failed to add category. Please try again.');
+        } finally {
+            setIsAddCategoryModalVisible(false); // Close the modal
+        }
     };
+
+    if (loading) {
+        return (
+            <View style={styles.loaderContainer}>
+                <ActivityIndicator size="large" color="#A0D8B3" />
+                <Text style={styles.loaderText}>Loading tasks...</Text>
+            </View>
+        );
+    }
+
+    if (error) {
+        return (
+            <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>Error: {error}</Text>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
-                {categories.length > 0 ? (
-                    categories.map((category, index) => (
+                {Object.keys(categories).length > 0 ? (
+                    Object.keys(categories).map((categoryName) => (
                         <TouchableOpacity
-                            key={index}
+                            key={categoryName}
                             style={styles.categoryButton}
                             onPress={() =>
                                 router.push({
                                     pathname: 'TaskBoard/TaskCategoryScreen',
-                                    params: { categoryName: category.name}
+                                    params: { categoryName },
                                 })
                             }
                         >
-                            <Text style={styles.categoryButtonText}>
-                                {category.name}
-                            </Text>
+                            <Text style={styles.categoryButtonText}>{categoryName}</Text>
                         </TouchableOpacity>
                     ))
                 ) : (
@@ -47,7 +85,6 @@ const TaskBoardPage = () => {
                 )}
             </ScrollView>
 
-            {/* Text-only buttons */}
             <TouchableOpacity onPress={() => router.push('TaskBoard/AllTasksPage')}>
                 <Text style={styles.textButton}>Show My Tasks</Text>
             </TouchableOpacity>
@@ -55,11 +92,10 @@ const TaskBoardPage = () => {
                 <Text style={styles.textButton}>Add Category</Text>
             </TouchableOpacity>
 
-            {/* Add Category Modal */}
             <AddCategoryModal
                 visible={isAddCategoryModalVisible}
                 onClose={() => setIsAddCategoryModalVisible(false)}
-                onAddCategory={handleAddCategory} // Pass the handler to the modal
+                onAddCategory={handleAddCategory}
             />
         </View>
     );
@@ -94,6 +130,25 @@ const styles = StyleSheet.create({
         color: '#A0D8B3',
         fontSize: 16,
         marginVertical: 10,
+    },
+    loaderContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    loaderText: {
+        marginTop: 10,
+        color: '#A0D8B3',
+        fontSize: 16,
+    },
+    errorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    errorText: {
+        color: '#FF0000',
+        fontSize: 16,
     },
 });
 

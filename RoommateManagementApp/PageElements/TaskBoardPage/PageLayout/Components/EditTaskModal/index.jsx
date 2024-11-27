@@ -3,41 +3,49 @@ import { Modal, View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } fro
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Picker } from '@react-native-picker/picker';
-import { useDispatch } from 'react-redux';
-import { editTaskInDB } from '../../../../../StateManagement/Slices/TaskBoardSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { editTaskInCategoryDB } from '@/StateManagement/Slices/TaskBoardSlice';
 
-const EditTaskModal = ({ visible, onClose, task, category, groupID }) => {
+const EditTaskModal = ({ visible, onClose, task, categoryName }) => {
+    const groupID = useSelector((state) => state.user.groupID);
+    const roommates = useSelector((state) => state.user.roommates) || [];
     const [editedTask, setEditedTask] = useState(null);
     const [isDatePickerVisible, setDatePickerVisible] = useState(false);
     const [isPickerVisible, setPickerVisible] = useState(false);
+    const [pickerValue, setPickerValue] = useState(null);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setEditedTask(task);
+        if (task) {
+            setEditedTask(task);
+            setPickerValue(task.assignedTo || ''); // Initialize picker value
+        }
     }, [task]);
 
     const handleSave = async () => {
         if (!editedTask?.name?.trim()) {
-            Alert.alert("Error", "Task name cannot be empty!");
+            Alert.alert('Error', 'Task name cannot be empty!');
             return;
         }
 
-        if (!category?.name || !groupID) {
-            Alert.alert("Error", "Invalid category or group data!");
+        if (!categoryName || !groupID) {
+            Alert.alert('Error', 'Invalid category or group data!');
             return;
         }
 
         try {
-            await dispatch(editTaskInDB({
-                groupID,
-                date: editedTask.deadline,
-                taskId: editedTask.id,
-                updatedTask: editedTask
-            })).unwrap();
+            await dispatch(
+                editTaskInCategoryDB({
+                    groupID,
+                    categoryName,
+                    taskId: editedTask.id,
+                    updatedTask: { ...editedTask, assignedTo: pickerValue }, // Send the picker value
+                })
+            ).unwrap();
             onClose();
         } catch (error) {
-            Alert.alert("Error", error.message || "Failed to edit task.");
+            Alert.alert('Error', error.message || 'Failed to edit task.');
         }
     };
 
@@ -83,9 +91,7 @@ const EditTaskModal = ({ visible, onClose, task, category, groupID }) => {
                     />
                     <Text style={styles.label}>Deadline:</Text>
                     <TouchableOpacity onPress={() => setDatePickerVisible(true)} style={styles.input}>
-                        <Text style={styles.text}>
-                            {editedTask.deadline || 'Select Deadline'}
-                        </Text>
+                        <Text style={styles.text}>{editedTask.deadline || 'Select Deadline'}</Text>
                     </TouchableOpacity>
                     <DateTimePickerModal
                         isVisible={isDatePickerVisible}
@@ -95,27 +101,35 @@ const EditTaskModal = ({ visible, onClose, task, category, groupID }) => {
                     />
                     <Text style={styles.label}>Assign To:</Text>
                     <TouchableOpacity onPress={() => setPickerVisible(true)} style={styles.input}>
-                        <Text style={styles.text}>
-                            {editedTask.assignedTo || 'Select Assignee'}
-                        </Text>
+                        <Text style={styles.text}>{pickerValue || 'Select Assignee'}</Text>
                     </TouchableOpacity>
                     {isPickerVisible && (
-                        <Modal transparent animationType="fade" onRequestClose={() => setPickerVisible(false)}>
+                        <Modal
+                            transparent
+                            animationType="fade"
+                            onRequestClose={() => setPickerVisible(false)}
+                        >
                             <View style={styles.pickerModal}>
                                 <View style={styles.pickerContainer}>
                                     <Picker
-                                        selectedValue={editedTask.assignedTo}
+                                        selectedValue={pickerValue}
                                         onValueChange={(value) => {
-                                            setEditedTask({ ...editedTask, assignedTo: value });
+                                            setPickerValue(value); // Update picker value
                                             setPickerVisible(false);
                                         }}
                                     >
-                                        <Picker.Item label="Unassigned" value="" />
-                                        <Picker.Item label="You" value="You" />
-                                        <Picker.Item label="Teammate 1" value="Teammate 1" />
-                                        <Picker.Item label="Teammate 2" value="Teammate 2" />
+                                        {roommates.map((roommate) => (
+                                            <Picker.Item
+                                                key={roommate.id}
+                                                label={roommate.username}
+                                                value={roommate.id}
+                                            />
+                                        ))}
                                     </Picker>
-                                    <TouchableOpacity onPress={() => setPickerVisible(false)} style={styles.closePickerButton}>
+                                    <TouchableOpacity
+                                        onPress={() => setPickerVisible(false)}
+                                        style={styles.closePickerButton}
+                                    >
                                         <Text style={styles.closePickerText}>Close</Text>
                                     </TouchableOpacity>
                                 </View>
