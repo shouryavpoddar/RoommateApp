@@ -1,29 +1,33 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { addCategory } from "@/StateManagement/Slices/TaskBoardSlice";
+import { addCategoryToDB } from "../../../../../StateManagement/Slices/TaskBoardSlice";
 import { AntDesign } from '@expo/vector-icons';
 
-const AddCategoryModal = ({ visible, onClose }) => {
+const AddCategoryModal = ({ visible, onClose, groupID }) => {
     const [newCategoryName, setNewCategoryName] = useState('');
     const dispatch = useDispatch();
 
-    const handleAddCategory = () => {
-        if (newCategoryName.trim()) {
-            dispatch(addCategory({ categoryName: newCategoryName })); // Dispatch with the correct field
-            setNewCategoryName(''); // Reset input
-            onClose(); // Close modal
-        } else {
-            alert('Category name cannot be empty!'); // Validate empty input
+    const handleAddCategory = async () => {
+        if (!newCategoryName.trim()) {
+            Alert.alert("Error", "Category name cannot be empty!");
+            return;
+        }
+
+        try {
+            await dispatch(addCategoryToDB({ groupID, categoryName: newCategoryName })).unwrap();
+            setNewCategoryName('');
+            onClose();
+        } catch (error) {
+            Alert.alert("Error", error.message || "Failed to add category.");
         }
     };
 
     const handleClose = () => {
-        setNewCategoryName(''); // Reset input
-        onClose(); // Close modal
+        setNewCategoryName('');
+        onClose();
     };
 
-    // Render nothing if `visible` is false
     if (!visible) {
         return null;
     }

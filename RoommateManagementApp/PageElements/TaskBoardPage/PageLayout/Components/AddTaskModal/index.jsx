@@ -1,71 +1,66 @@
-import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { Picker } from '@react-native-picker/picker';
-import { useSelector, useDispatch } from 'react-redux';
-import { addTask } from '@/StateManagement/Slices/TaskBoardSlice'; 
+import React, { useState } from "react";
+import { Modal, View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { Picker } from "@react-native-picker/picker";
+import { useDispatch } from "react-redux";
+import { addTaskToDB } from "../../../../../StateManagement/Slices/TaskBoardSlice";
 
-const AddTaskModal = ({ visible, onClose, category }) => {
-    const [taskName, setTaskName] = useState('');
-    const [taskDescription, setTaskDescription] = useState('');
-    const [assignedTo, setAssignedTo] = useState('');
-    const [deadline, setDeadline] = useState('');
-    const [isDatePickerVisible, setDatePickerVisible] = useState(false); // For the new date picker
-    const [isPickerVisible, setPickerVisible] = useState(false); // For dropdown visibility
+const AddTaskModal = ({ visible, onClose, category, groupID }) => {
+    const [taskName, setTaskName] = useState("");
+    const [taskDescription, setTaskDescription] = useState("");
+    const [assignedTo, setAssignedTo] = useState("");
+    const [deadline, setDeadline] = useState("");
+    const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+    const [isPickerVisible, setPickerVisible] = useState(false);
 
     const dispatch = useDispatch();
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!taskName.trim()) {
-            Alert.alert('Error', 'Task name cannot be empty!');
+            Alert.alert("Error", "Task name cannot be empty!");
             return;
         }
 
-        if (!category || !category.name) {
-            Alert.alert('Error', 'Invalid category data!');
+        if (!groupID || !category || !category.name) {
+            Alert.alert("Error", "Invalid group or category data!");
             return;
         }
 
         const newTask = {
-            id: Date.now().toString(),
             name: taskName,
-            description: taskDescription || 'No description provided.',
-            assignedTo: assignedTo || 'Unassigned',
-            deadline: deadline || 'No deadline',
-            status: 'pending',
+            description: taskDescription || "No description provided.",
+            assignedTo: assignedTo || "Unassigned",
+            deadline: deadline || "No deadline",
         };
 
-        // Dispatch action to add the task
-        dispatch(addTask({ categoryName: category.name, task: newTask }));
-
-        resetInputs();
-        onClose();
+        try {
+            await dispatch(addTaskToDB({ groupID, category: category.name, task: newTask })).unwrap();
+            resetInputs();
+            onClose();
+        } catch (error) {
+            Alert.alert("Error", error.message || "Failed to add task.");
+        }
     };
 
     const resetInputs = () => {
-        setTaskName('');
-        setTaskDescription('');
-        setAssignedTo('');
-        setDeadline('');
-    };
-
-    const handleClose = () => {
-        resetInputs();
-        requestAnimationFrame(onClose); // Ensure modal closes immediately
+        setTaskName("");
+        setTaskDescription("");
+        setAssignedTo("");
+        setDeadline("");
     };
 
     const handleDateConfirm = (selectedDate) => {
-        setDeadline(selectedDate.toISOString().split('T')[0]);
+        setDeadline(selectedDate.toISOString().split("T")[0]);
         setDatePickerVisible(false);
     };
 
     return (
-        <Modal visible={visible} animationType="slide" transparent={true}>
+        <Modal visible={visible} animationType="slide" transparent>
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContainer}>
                     {/* Close Button */}
-                    <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+                    <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                         <Ionicons name="close" size={24} color="#4A154B" />
                     </TouchableOpacity>
 
@@ -89,7 +84,7 @@ const AddTaskModal = ({ visible, onClose, category }) => {
                         onChangeText={setTaskDescription}
                         style={[styles.input, styles.textArea]}
                         multiline
-                        blurOnSubmit={true}
+                        blurOnSubmit
                     />
 
                     {/* Assign To Dropdown */}
@@ -99,7 +94,7 @@ const AddTaskModal = ({ visible, onClose, category }) => {
                         style={styles.input}
                     >
                         <Text style={styles.dropdownText}>
-                            {assignedTo || 'Select Assignee'}
+                            {assignedTo || "Select Assignee"}
                         </Text>
                     </TouchableOpacity>
 
@@ -144,7 +139,7 @@ const AddTaskModal = ({ visible, onClose, category }) => {
                         style={styles.input}
                     >
                         <Text style={styles.dropdownText}>
-                            {deadline || 'Select Deadline'}
+                            {deadline || "Select Deadline"}
                         </Text>
                     </TouchableOpacity>
                     <DateTimePickerModal
@@ -155,10 +150,7 @@ const AddTaskModal = ({ visible, onClose, category }) => {
                     />
 
                     {/* Save Button */}
-                    <TouchableOpacity
-                        onPress={handleSave}
-                        style={styles.saveButton}
-                    >
+                    <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
                         <Text style={styles.saveButtonText}>Save</Text>
                     </TouchableOpacity>
                 </View>
@@ -170,79 +162,79 @@ const AddTaskModal = ({ visible, onClose, category }) => {
 const styles = StyleSheet.create({
     modalOverlay: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     modalContainer: {
-        width: '90%',
-        backgroundColor: '#EDEFF7',
+        width: "90%",
+        backgroundColor: "#EDEFF7",
         padding: 20,
         borderRadius: 12,
     },
     closeButton: {
-        position: 'absolute',
+        position: "absolute",
         top: 10,
         right: 10,
     },
     title: {
         fontSize: 20,
-        fontWeight: 'bold',
-        color: '#4B225F',
+        fontWeight: "bold",
+        color: "#4B225F",
         marginBottom: 20,
     },
     label: {
         marginBottom: 5,
-        fontWeight: 'bold',
-        color: '#4B225F',
+        fontWeight: "bold",
+        color: "#4B225F",
     },
     input: {
         borderWidth: 1,
-        borderColor: '#4B225F',
+        borderColor: "#4B225F",
         borderRadius: 8,
         padding: 10,
         marginBottom: 16,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: "#FFFFFF",
     },
     textArea: {
         height: 80,
     },
     dropdownText: {
-        color: '#4B225F',
+        color: "#4B225F",
     },
     pickerModalOverlay: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     pickerContainer: {
-        width: '80%',
-        backgroundColor: '#FFFFFF',
+        width: "80%",
+        backgroundColor: "#FFFFFF",
         borderRadius: 12,
         padding: 20,
     },
     closePickerButton: {
         marginTop: 10,
         padding: 10,
-        backgroundColor: '#8A7191',
+        backgroundColor: "#8A7191",
         borderRadius: 8,
-        alignItems: 'center',
+        alignItems: "center",
     },
     closePickerButtonText: {
-        color: '#FFFFFF',
-        fontWeight: 'bold',
+        color: "#FFFFFF",
+        fontWeight: "bold",
     },
     saveButton: {
-        backgroundColor: '#8A7191',
+        backgroundColor: "#8A7191",
         padding: 16,
         borderRadius: 8,
-        alignItems: 'center',
+        alignItems: "center",
         marginBottom: 8,
     },
     saveButtonText: {
-        color: '#FFFFFF',
-        fontWeight: 'bold',
+        color: "#FFFFFF",
+        fontWeight: "bold",
     },
 });
 

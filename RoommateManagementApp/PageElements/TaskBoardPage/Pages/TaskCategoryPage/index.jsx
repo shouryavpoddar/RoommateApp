@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { editTask } from '@/StateManagement/Slices/TaskBoardSlice';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { editTaskInDB } from '../../../../StateManagement/Slices/TaskBoardSlice';
 import AddTaskModal from './../../PageLayout/Components/AddTaskModal';
 import EditTaskModal from './../../PageLayout/Components/EditTaskModal';
 
-const TaskCategoryPage = ({ category }) => {
+const TaskCategoryPage = ({ category, groupID }) => {
     const initialCategory = category;
     const categories = useSelector((state) => state.taskBoard.categories);
     const dispatch = useDispatch();
@@ -51,10 +51,26 @@ const TaskCategoryPage = ({ category }) => {
         setIsSorted(false);
     };
 
-    // Handle task editing
-    const handleEditTask = (updatedTask) => {
-        dispatch(editTask({ categoryName: currentCategory.name, taskId: updatedTask.id, updatedTask }));
-        setIsEditModalVisible(false);
+    // Handle task editing with Firebase integration
+    const handleEditTask = async (updatedTask) => {
+        if (!groupID) {
+            Alert.alert("Error", "Group ID is undefined. Cannot update task.");
+            return;
+        }
+
+        try {
+            await dispatch(
+                editTaskInDB({
+                    groupID,
+                    date: updatedTask.deadline,
+                    taskId: updatedTask.id,
+                    updatedTask,
+                })
+            ).unwrap();
+            setIsEditModalVisible(false);
+        } catch (error) {
+            Alert.alert("Error", error.message || "Failed to update task.");
+        }
     };
 
     return (
@@ -106,6 +122,7 @@ const TaskCategoryPage = ({ category }) => {
             <AddTaskModal
                 visible={isAddModalVisible}
                 category={currentCategory}
+                groupID={groupID} // Pass groupID for Firebase operations
                 onClose={() => setIsAddModalVisible(false)}
             />
 
@@ -115,6 +132,7 @@ const TaskCategoryPage = ({ category }) => {
                     visible={isEditModalVisible}
                     task={selectedTask}
                     category={currentCategory}
+                    groupID={groupID} // Pass groupID for Firebase operations
                     onClose={() => setIsEditModalVisible(false)}
                     onSave={handleEditTask}
                 />

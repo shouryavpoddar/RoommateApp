@@ -149,6 +149,7 @@ const userSlice = createSlice({
     },
     reducers: {
         setId: (state, action) => {
+            console.log("Setting ID:", action.payload);
             state.id = action.payload;
         },
         logout: (state) => {
