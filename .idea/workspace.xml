@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6b4ae8f6-2241-453b-9437-feabb8f02d5f" name="Changes" comment="Created Tabs">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_16_24,_4_15 PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_16_24__4_15PM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ExpensesPage/Pages/FriendsPage/PageLayout/Components/ExpensesWidget/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/PageElements/ExpensesPage/Pages/FriendsPage/PageLayout/Components/ExpensesWidget/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/(tabs)/SharedExpenses/_layout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/(tabs)/SharedExpenses/_layout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/(tabs)/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/RoommateManagementApp/app/(app)/(tabs)/index.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +67,7 @@
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev-client-app&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;expenses-backend&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Projects/RoommateApp&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,

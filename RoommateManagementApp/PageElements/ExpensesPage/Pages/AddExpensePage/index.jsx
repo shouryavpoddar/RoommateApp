@@ -3,7 +3,7 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Alert, TouchableOpacity, View} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { addExpense } from "@/StateManagement/Slices/ExpensesSlice";
+import { addExpenseToDB } from "@/StateManagement/Slices/ExpensesSlice";
 import Layout from './PageLayout';
 import ExpenseDescriptionInput from './PageLayout/Components/ExpenseDescriptionInput';
 import AmountInput from './PageLayout/Components/AmountInput';
@@ -20,7 +20,9 @@ import {useRouter} from "expo-router";
 const AddExpenseScreen = () => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const membersData = useSelector((state) => state.expenses.friends);
+    const membersData = useSelector((state) => state.user.roommates);
+    const groupID = useSelector((state) => state.user.groupID);
+    const userID = useSelector((state)=>state.user.id)
     const [amount, setAmount] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [splitModalVisible, setSplitModalVisible] = useState(false);
@@ -28,6 +30,8 @@ const AddExpenseScreen = () => {
     const [splitPercentages, setSplitPercentages] = useState({ You: '100' });
     const [splitType, setSplitType] = useState('equally');
     const [description, setDescription] = useState('');
+
+    console.log("ID",userID);
 
     useEffect(() => {
         if (selectedMembers.length > 0) {
@@ -67,17 +71,29 @@ const AddExpenseScreen = () => {
             return;
         }
 
+        if (!groupID) {
+            alert("Group ID is missing. Cannot create expense.");
+            return;
+        }
+
+        console.log("Creating expense for groupID:", groupID)
+        console.log("userid", userID)
+
+        const { You, ...rest } = splitPercentages;
+        const augSplitPercentages = { ...rest, [userID]: You };
+
         const expenseData = {
             description,
             amount: parseFloat(amount),
-            splitPercentages: splitPercentages,
+            splitPercentages: augSplitPercentages,
             splitType,
             date: new Date().toLocaleDateString(),
-            members: selectedMembers,
+            members: selectedMembers.map((id)=> (id=="You")? userID: id),
+            paidBy: userID,
         };
 
-        dispatch(addExpense(expenseData));
-        Alert.alert("Success", "Expense has been saved.");
+        dispatch(addExpenseToDB({ groupID, expense: expenseData }));
+        Alert.alert("Success", "Expense has been dispatched.");
         router.back();
     };
 

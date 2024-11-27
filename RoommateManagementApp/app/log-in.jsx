@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, Animated, StyleSheet } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigation, router } from "expo-router";
-import { fetchUserDetails } from "@/StateManagement/Slices/UserSlice";
+import {fetchUserDetails, setId} from "@/StateManagement/Slices/UserSlice";
+import { fetchRoommateDetails } from "@/StateManagement/Slices/UserSlice";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase.config";
 
@@ -24,13 +25,19 @@ const LoginPage = () => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, username, password);
             const uid = userCredential.user.uid; // Get user's unique ID
+            dispatch(setId(uid));
 
-            console.log("User logged in with UID:", uid);
 
             // Fetch user details and update Redux state
-            await dispatch(fetchUserDetails(uid));
+            const userDetails = await dispatch(fetchUserDetails(uid)).unwrap();
 
-            console.log("User details fetched and stored in Redux.");
+            // Reactively fetch roommates based on updated groupID
+            // groupId = userDetails.groupID
+            if (userDetails.groupID) {
+                await dispatch(fetchRoommateDetails({ uid, groupID: userDetails.groupID }));
+            } else {
+                console.log("GroupID not available, skipping roommate fetch.");
+            }
 
             // Navigate to the main screen
             router.replace("/");

@@ -8,11 +8,11 @@ const renderFriend = ({ item, onPress }) => (
         style={styles.friendContainer}
     >
         <View>
-            <Text style={styles.friendName}>{item.name}</Text>
+            <Text style={styles.friendName}>{item.username}</Text>
             <Text style={styles.balanceText}>Balance: ${item.balance}</Text>
             {(item.transactions || []).slice(0, 2).map((transaction, index) => (
                 <Text key={index} style={styles.transactionText}>
-                    {transaction.description}: ${transaction.amount.toFixed(2)}
+                    {transaction.description}: ${transaction.amount.toFixed(2)} {transaction.type === 'lent' ? '(Owed to You)' : '(You Owe)'}
                 </Text>
             ))}
         </View>
@@ -35,11 +35,11 @@ const styles = StyleSheet.create({
     },
     balanceText: {
         fontSize: 12,
-        color: '#6B7280', // Similar to text-gray-500
+        color: '#6B7280',
     },
     transactionText: {
         fontSize: 10,
-        color: '#9E9E9E', // Similar to text-gray-400
+        color: '#9E9E9E',
     },
 });
 
