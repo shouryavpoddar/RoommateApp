@@ -8,7 +8,7 @@ const SplitPercentageModal = ({ selectedMembers, membersData, splitPercentages, 
             const member = membersData.find((m) => m.id === memberId);
             return (
                 <View key={memberId} style={styles.memberRow}>
-                    <Text style={styles.memberName}>{member?.name || 'You'}</Text>
+                    <Text style={styles.memberName}>{member?.username || 'You'}</Text>
                     <TextInput
                         style={styles.percentageInput}
                         placeholder="0"

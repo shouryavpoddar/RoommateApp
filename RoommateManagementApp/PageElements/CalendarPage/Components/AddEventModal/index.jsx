@@ -8,9 +8,11 @@ const AddEventModal = () => {
     const { selectedDate, setIsAddEventModalVisible } = useContext(CalendarContext);
     const dispatch = useDispatch();
 
-    // Retrieve the logged-in user's groupID from the Redux state
+    // Retrieve the logged-in user's groupID and username from Redux
     const groupID = useSelector((state) => state.user.groupID);
+    const createdBy = useSelector((state) => state.user.username || state.user.id); // Use username or fallback to user ID
     console.log("Current groupID from Redux:", groupID);
+    console.log("Task created by:", createdBy);
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -32,8 +34,8 @@ const AddEventModal = () => {
             endTime,
         };
 
-        // Dispatch the Thunk with the groupID
-        dispatch(addTaskToDB({ groupID, date: selectedDate, task: newTask }));
+        // Dispatch the Thunk with the groupID and createdBy field
+        dispatch(addTaskToDB({ groupID, date: selectedDate, task: newTask, createdBy }));
         setIsAddEventModalVisible(false);
     };
 

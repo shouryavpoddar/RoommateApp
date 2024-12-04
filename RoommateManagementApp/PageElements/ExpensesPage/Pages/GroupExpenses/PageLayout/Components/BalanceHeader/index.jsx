@@ -2,11 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const BalanceHeader = ({ name, balance }) => (
+
     <View style={styles.container}>
         <View style={styles.balanceBox}>
             <Text style={styles.name}>{name}</Text>
             <Text style={[styles.balanceText, balance >= 0 ? styles.positiveBalance : styles.negativeBalance]}>
-                {balance >= 0 ? `owes you $${balance.toFixed(2)}` : `is owed from you $${Math.abs(balance).toFixed(2)}`}
+                {balance >= 0 ? `owes you $${Math.abs(balance).toFixed(2)}` : `is owed from you $${Math.abs(balance).toFixed(2)}`}
             </Text>
         </View>
     </View>

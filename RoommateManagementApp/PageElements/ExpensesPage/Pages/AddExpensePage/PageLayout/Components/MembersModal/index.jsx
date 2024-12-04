@@ -13,7 +13,7 @@ const MembersModal = ({ membersData, selectedMembers, toggleMember, onClose }) =
                     style={styles.memberRow}
                     onPress={() => toggleMember(item)}
                 >
-                    <Text style={styles.memberName}>{item.name}</Text>
+                    <Text style={styles.memberName}>{item.username}</Text>
                     {selectedMembers.includes(item.id) && (
                         <Icon name="check" size={20} color="#2BAC76" />
                     )}

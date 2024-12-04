@@ -1,21 +1,24 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 
-const SelectedMembersDisplay = ({ selectedMembers, membersData }) => (
-    <View style={styles.selectedMembersDisplay}>
+const SelectedMembersDisplay = ({ selectedMembers, membersData }) => {
+    console.log(selectedMembers, membersData)
+
+
+   return <View style={styles.selectedMembersDisplay}>
         <Text style={styles.selectedMembersLabel}>With:</Text>
         <View style={styles.selectedMembersContainer}>
             {selectedMembers.map((memberId) => {
                 const member = membersData.find((m) => m.id === memberId);
                 return (
                     <View key={memberId} style={styles.selectedMember}>
-                        <Text style={styles.selectedMemberName}>{member?.name || 'You'}</Text>
+                        <Text style={styles.selectedMemberName}>{member?.username}</Text>
                     </View>
                 );
             })}
         </View>
     </View>
-);
+};
 
 const styles = StyleSheet.create({
     selectedMembersDisplay: {
