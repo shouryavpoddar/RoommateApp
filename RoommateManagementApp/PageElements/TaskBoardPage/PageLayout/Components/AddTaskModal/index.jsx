@@ -37,19 +37,22 @@ const AddTaskModal = ({ visible, onClose, categoryName }) => {
             Alert.alert("Error", "Task name cannot be empty!");
             return;
         }
-
+    
         if (!groupID || !categoryName) {
             Alert.alert("Error", "Invalid group or category data!");
             return;
         }
-
+    
+        const selectedRoommate = roommates.find((roommate) => roommate.id === assignedTo);
+    
         const newTask = {
             name: taskName,
             description: taskDescription || "No description provided.",
             assignedTo: assignedTo || "Unassigned",
+            assignedToName: selectedRoommate ? selectedRoommate.username : "Unassigned",
             deadline: deadline || "No deadline",
         };
-
+    
         try {
             await dispatch(
                 addTaskToCategoryDB({ groupID, categoryName, task: newTask })

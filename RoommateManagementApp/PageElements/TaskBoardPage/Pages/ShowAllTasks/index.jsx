@@ -6,6 +6,7 @@ import EditTaskModal from '../../PageLayout/Components/EditTaskModal';
 
 const ShowAllTasks = ({ groupID }) => {
     const categories = useSelector((state) => state.taskBoard.categories);
+    const roommates = useSelector((state) => state.user.roommates) || []; // List of roommates with IDs and usernames
     const currentUser = useSelector((state) => state.user.id); // Get the current user's ID
     const router = useRouter();
 
@@ -14,33 +15,32 @@ const ShowAllTasks = ({ groupID }) => {
     const [userTasks, setUserTasks] = useState([]);
     const [isSorted, setIsSorted] = useState(false);
 
-
     function findCategoryNameForTask(categories, taskId) {
-        // Iterate over each category in the categories object
         for (const [categoryName, tasks] of Object.entries(categories)) {
-            // Check if the task exists in the tasks array
-            const taskExists = tasks.some(task => task.id === taskId);
-            if (taskExists) {
-                return categoryName; // Return the category name if task is found
-            }
+            const taskExists = tasks.some((task) => task.id === taskId);
+            if (taskExists) return categoryName;
         }
-        // Return null if no category contains the task
         return null;
     }
+
     // Dynamically fetch tasks assigned to the current user whenever categories change
     useEffect(() => {
         const tasks = Object.entries(categories).flatMap(([categoryName, tasks]) =>
             tasks
                 .filter((task) => task.assignedTo === currentUser) // Filter tasks assigned to the current user
-                .map((task) => ({ ...task, categoryName })) // Add category reference
+                .map((task) => ({
+                    ...task,
+                    categoryName, // Add category reference
+                    assignedToName: roommates.find((rm) => rm.id === task.assignedTo)?.username || "Unassigned",
+                }))
         );
         setUserTasks(sortByDefault(tasks)); // Initialize with default sort
-    }, [categories, currentUser]);
+    }, [categories, currentUser, roommates]);
 
     // Default sorting: Pending tasks first, then Done
     const sortByDefault = (tasks) => {
-        const pendingTasks = tasks.filter((task) => task.status !== 'done');
-        const doneTasks = tasks.filter((task) => task.status === 'done');
+        const pendingTasks = tasks.filter((task) => task.status !== "done");
+        const doneTasks = tasks.filter((task) => task.status === "done");
         return [...pendingTasks, ...doneTasks];
     };
 
@@ -70,16 +70,23 @@ const ShowAllTasks = ({ groupID }) => {
                             key={task.id}
                             style={[
                                 styles.taskCard,
-                                { backgroundColor: task.status === 'done' ? '#A0D8B3' : '#EDEFF7' },
+                                { backgroundColor: task.status === "done" ? "#A0D8B3" : "#EDEFF7" },
                             ]}
                             onPress={() => {
                                 setSelectedTask(task);
                                 setIsEditModalVisible(true);
                             }}
                         >
-                            <Text style={styles.taskTitle}>{task.name || 'Untitled Task'}</Text>
-                            <Text style={styles.taskText}>Description: {task.description || 'No description provided'}</Text>
-                            <Text style={styles.taskText}>Deadline: {task.deadline || 'No deadline'}</Text>
+                            <Text style={styles.taskTitle}>{task.name || "Untitled Task"}</Text>
+                            <Text style={styles.taskText}>
+                                Description: {task.description || "No description provided"}
+                            </Text>
+                            <Text style={styles.taskText}>
+                                Assigned to: {task.assignedToName || "Unassigned"}
+                            </Text>
+                            <Text style={styles.taskText}>
+                                Deadline: {task.deadline || "No deadline"}
+                            </Text>
                             <Text style={styles.taskText}>Category: {task.categoryName}</Text>
                         </TouchableOpacity>
                     ))
@@ -90,7 +97,7 @@ const ShowAllTasks = ({ groupID }) => {
 
             {/* Sort/Unsort Text */}
             <TouchableOpacity onPress={isSorted ? unsortTasks : sortByDeadline} style={styles.sortButton}>
-                <Text style={styles.sortText}>{isSorted ? 'Unsort' : 'Sort by Deadline'}</Text>
+                <Text style={styles.sortText}>{isSorted ? "Unsort" : "Sort by Deadline"}</Text>
             </TouchableOpacity>
 
             {/* Back Button */}
@@ -111,6 +118,7 @@ const ShowAllTasks = ({ groupID }) => {
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {

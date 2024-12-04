@@ -25,29 +25,37 @@ const EditTaskModal = ({ visible, onClose, task, categoryName }) => {
 
     const handleSave = async () => {
         if (!editedTask?.name?.trim()) {
-            Alert.alert('Error', 'Task name cannot be empty!');
+            Alert.alert("Error", "Task name cannot be empty!");
             return;
         }
-
+    
         if (!categoryName || !groupID) {
-            Alert.alert('Error', 'Invalid category or group data!');
+            Alert.alert("Error", "Invalid category or group data!");
             return;
         }
-
+    
+        const selectedRoommate = roommates.find((roommate) => roommate.id === pickerValue);
+    
+        const updatedTask = {
+            ...editedTask,
+            assignedTo: pickerValue || "Unassigned",
+            assignedToName: selectedRoommate ? selectedRoommate.username : "Unassigned",
+        };
+    
         try {
             await dispatch(
                 editTaskInCategoryDB({
                     groupID,
                     categoryName,
                     taskId: editedTask.id,
-                    updatedTask: { ...editedTask, assignedTo: pickerValue }, // Send the picker value
+                    updatedTask,
                 })
             ).unwrap();
             onClose();
         } catch (error) {
-            Alert.alert('Error', error.message || 'Failed to edit task.');
+            Alert.alert("Error", error.message || "Failed to edit task.");
         }
-    };
+    };    
 
     const toggleStatus = () => {
         const newStatus = editedTask.status === 'done' ? 'pending' : 'done';

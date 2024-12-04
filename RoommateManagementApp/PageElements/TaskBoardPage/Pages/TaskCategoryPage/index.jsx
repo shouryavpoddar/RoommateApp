@@ -86,7 +86,7 @@ const TaskCategoryPage = ({ categoryName, groupID }) => {
                             <View>
                                 <Text style={styles.taskName}>{task.name || 'Untitled Task'}</Text>
                                 <Text style={styles.taskDetails}>
-                                    Assigned to: {task.assignedTo || 'Unassigned'}
+                                    Assigned to: {task.assignedToName || 'Unassigned'}
                                 </Text>
                                 <Text style={styles.taskDetails}>
                                     Deadline: {task.deadline || 'No deadline'}
