@@ -1,102 +1,103 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { editTaskInDB } from '../../../../StateManagement/Slices/TaskBoardSlice';
+import { editTaskInCategoryDB } from '@/StateManagement/Slices/TaskBoardSlice';
 import AddTaskModal from './../../PageLayout/Components/AddTaskModal';
 import EditTaskModal from './../../PageLayout/Components/EditTaskModal';
 
-const TaskCategoryPage = ({ category, groupID }) => {
-    const initialCategory = category;
+const TaskCategoryPage = ({ categoryName, groupID }) => {
     const categories = useSelector((state) => state.taskBoard.categories);
     const dispatch = useDispatch();
 
     const [isAddModalVisible, setIsAddModalVisible] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-    const [currentCategory, setCurrentCategory] = useState(initialCategory);
     const [sortedTasks, setSortedTasks] = useState([]);
     const [isSorted, setIsSorted] = useState(false);
 
-    // Dynamically update `currentCategory` and tasks when categories change
-    useEffect(() => {
-        const updatedCategory = categories.find((cat) => cat.name === initialCategory.name);
-        if (updatedCategory) {
-            setCurrentCategory(updatedCategory);
-            setSortedTasks(sortByDefault(updatedCategory.tasks)); // Sort tasks by default
-        }
-    }, [categories]);
+    // Get tasks for the current category
+    const currentTasks = categories[categoryName] || [];
 
-    // Default sorting: Pending first, then Done
+    console.log(currentTasks)
+ 
+    // Sort tasks by default (Pending first, then Done)
     const sortByDefault = (tasks) => {
         const pendingTasks = tasks.filter((task) => task.status !== 'done');
         const doneTasks = tasks.filter((task) => task.status === 'done');
         return [...pendingTasks, ...doneTasks];
     };
 
-    // Sort by Deadline
+    useEffect(() => {
+        // Update sorted tasks when currentTasks changes
+        setSortedTasks(sortByDefault(currentTasks));
+    }, [currentTasks]);
+
+    // Sort tasks by deadline
     const sortByDeadline = () => {
         const tasksWithDeadline = [...sortedTasks].filter((task) => task.deadline);
         const tasksWithoutDeadline = [...sortedTasks].filter((task) => !task.deadline);
 
-        // Sort tasks with deadlines in ascending order
         tasksWithDeadline.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
 
-        setSortedTasks([...tasksWithDeadline, ...tasksWithoutDeadline]); // Append tasks without deadlines
+        setSortedTasks([...tasksWithDeadline, ...tasksWithoutDeadline]);
         setIsSorted(true);
     };
 
     // Reset to default sorting
     const unsortTasks = () => {
-        setSortedTasks(sortByDefault(currentCategory.tasks)); // Reset to default order
+        setSortedTasks(sortByDefault(currentTasks));
         setIsSorted(false);
     };
 
-    // Handle task editing with Firebase integration
+    // Handle task editing
     const handleEditTask = async (updatedTask) => {
         if (!groupID) {
-            Alert.alert("Error", "Group ID is undefined. Cannot update task.");
+            Alert.alert('Error', 'Group ID is undefined. Cannot update task.');
             return;
         }
 
         try {
             await dispatch(
-                editTaskInDB({
+                editTaskInCategoryDB({
                     groupID,
-                    date: updatedTask.deadline,
+                    categoryName,
                     taskId: updatedTask.id,
                     updatedTask,
                 })
             ).unwrap();
             setIsEditModalVisible(false);
+            Alert.alert('Success', 'Task updated successfully.');
         } catch (error) {
-            Alert.alert("Error", error.message || "Failed to update task.");
+            Alert.alert('Error', error.message || 'Failed to update task.');
         }
     };
 
     return (
         <View style={styles.container}>
             <ScrollView>
-                {sortedTasks?.length > 0 ? (
+                {sortedTasks.length > 0 ? (
                     sortedTasks.map((task) => (
                         <TouchableOpacity
                             key={task.id}
                             style={task.status === 'done' ? styles.doneTask : styles.pendingTask}
                             onPress={() => {
-                                setSelectedTask(task); // Set the correct task
+                                setSelectedTask(task);
                                 setIsEditModalVisible(true);
                             }}
                         >
                             <View>
                                 <Text style={styles.taskName}>{task.name || 'Untitled Task'}</Text>
-                                <Text style={styles.taskDetails}>Assigned to: {task.assignedTo || 'Unassigned'}</Text>
-                                <Text style={styles.taskDetails}>Deadline: {task.deadline || 'No deadline'}</Text>
+                                <Text style={styles.taskDetails}>
+                                    Assigned to: {task.assignedToName || 'Unassigned'}
+                                </Text>
+                                <Text style={styles.taskDetails}>
+                                    Deadline: {task.deadline || 'No deadline'}
+                                </Text>
                             </View>
                         </TouchableOpacity>
                     ))
                 ) : (
-                    <Text style={styles.noTasksText}>
-                        No tasks in this category.
-                    </Text>
+                    <Text style={styles.noTasksText}>No tasks in this category.</Text>
                 )}
             </ScrollView>
 
@@ -121,8 +122,7 @@ const TaskCategoryPage = ({ category, groupID }) => {
             {/* Add Task Modal */}
             <AddTaskModal
                 visible={isAddModalVisible}
-                category={currentCategory}
-                groupID={groupID} // Pass groupID for Firebase operations
+                categoryName={categoryName}
                 onClose={() => setIsAddModalVisible(false)}
             />
 
@@ -131,8 +131,8 @@ const TaskCategoryPage = ({ category, groupID }) => {
                 <EditTaskModal
                     visible={isEditModalVisible}
                     task={selectedTask}
-                    category={currentCategory}
-                    groupID={groupID} // Pass groupID for Firebase operations
+                    categoryName={categoryName}
+                    groupID={groupID}
                     onClose={() => setIsEditModalVisible(false)}
                     onSave={handleEditTask}
                 />

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { addCategoryToDB } from "../../../../../StateManagement/Slices/TaskBoardSlice";
 import { AntDesign } from '@expo/vector-icons';
 
-const AddCategoryModal = ({ visible, onClose, groupID }) => {
+const AddCategoryModal = ({ visible, onClose }) => {
     const [newCategoryName, setNewCategoryName] = useState('');
     const dispatch = useDispatch();
+    const groupID = useSelector((state) => state.user.groupID);
 
     const handleAddCategory = async () => {
         if (!newCategoryName.trim()) {

@@ -28,9 +28,18 @@ const LoginPage = () => {
             dispatch(setId(uid));
 
 
+
             // Fetch user details and update Redux state
 
             const userDetails = await dispatch(fetchUserDetails(uid)).unwrap();
+
+            // Reactively fetch roommates based on updated groupID
+            // groupId = userDetails.groupID
+            if (userDetails.groupID) {
+                await dispatch(fetchRoommateDetails({ uid, groupID: userDetails.groupID }));
+            } else {
+                console.log("GroupID not available, skipping roommate fetch.");
+            }
 
             // Reactively fetch roommates based on updated groupID
             // groupId = userDetails.groupID

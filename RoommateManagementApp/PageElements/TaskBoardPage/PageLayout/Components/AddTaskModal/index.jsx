@@ -1,47 +1,30 @@
 import React, { useState } from "react";
-import { Modal, View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from "react-native";
+import {
+    Modal,
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    Alert,
+    StyleSheet,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Picker } from "@react-native-picker/picker";
-import { useDispatch } from "react-redux";
-import { addTaskToDB } from "../../../../../StateManagement/Slices/TaskBoardSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addTaskToCategoryDB } from "@/StateManagement/Slices/TaskBoardSlice";
 
-const AddTaskModal = ({ visible, onClose, category, groupID }) => {
+const AddTaskModal = ({ visible, onClose, categoryName }) => {
+    const groupID = useSelector((state) => state.user.groupID);
+    const roommates = useSelector((state) => state.user.roommates) || [];
     const [taskName, setTaskName] = useState("");
     const [taskDescription, setTaskDescription] = useState("");
     const [assignedTo, setAssignedTo] = useState("");
     const [deadline, setDeadline] = useState("");
     const [isDatePickerVisible, setDatePickerVisible] = useState(false);
-    const [isPickerVisible, setPickerVisible] = useState(false);
+    const {username, id} = useSelector((state)=> state.user)
 
     const dispatch = useDispatch();
-
-    const handleSave = async () => {
-        if (!taskName.trim()) {
-            Alert.alert("Error", "Task name cannot be empty!");
-            return;
-        }
-
-        if (!groupID || !category || !category.name) {
-            Alert.alert("Error", "Invalid group or category data!");
-            return;
-        }
-
-        const newTask = {
-            name: taskName,
-            description: taskDescription || "No description provided.",
-            assignedTo: assignedTo || "Unassigned",
-            deadline: deadline || "No deadline",
-        };
-
-        try {
-            await dispatch(addTaskToDB({ groupID, category: category.name, task: newTask })).unwrap();
-            resetInputs();
-            onClose();
-        } catch (error) {
-            Alert.alert("Error", error.message || "Failed to add task.");
-        }
-    };
 
     const resetInputs = () => {
         setTaskName("");
@@ -50,8 +33,40 @@ const AddTaskModal = ({ visible, onClose, category, groupID }) => {
         setDeadline("");
     };
 
+    const handleSave = async () => {
+        if (!taskName.trim()) {
+            Alert.alert("Error", "Task name cannot be empty!");
+            return;
+        }
+    
+        if (!groupID || !categoryName) {
+            Alert.alert("Error", "Invalid group or category data!");
+            return;
+        }
+    
+        const selectedRoommate = [...roommates, {username: username, id:id }].find((roommate) => roommate.id === assignedTo);
+    
+        const newTask = {
+            name: taskName,
+            description: taskDescription || "No description provided.",
+            assignedTo: assignedTo || "Unassigned",
+            assignedToName: selectedRoommate ? selectedRoommate.username : "Unassigned",
+            deadline: deadline || "No deadline",
+        };
+    
+        try {
+            await dispatch(
+                addTaskToCategoryDB({ groupID, categoryName, task: newTask })
+            ).unwrap();
+            resetInputs();
+            onClose();
+        } catch (error) {
+            Alert.alert("Error", error.message || "Failed to add task.");
+        }
+    };
+
     const handleDateConfirm = (selectedDate) => {
-        setDeadline(selectedDate.toISOString().split("T")[0]);
+        setDeadline(selectedDate.toISOString().split("T")[0]); // YYYY-MM-DD format
         setDatePickerVisible(false);
     };
 
@@ -59,15 +74,12 @@ const AddTaskModal = ({ visible, onClose, category, groupID }) => {
         <Modal visible={visible} animationType="slide" transparent>
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContainer}>
-                    {/* Close Button */}
                     <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                         <Ionicons name="close" size={24} color="#4A154B" />
                     </TouchableOpacity>
 
-                    {/* Title */}
                     <Text style={styles.title}>Add Task</Text>
 
-                    {/* Task Name Input */}
                     <Text style={styles.label}>Task Name:</Text>
                     <TextInput
                         placeholder="Enter Task Name"
@@ -76,7 +88,6 @@ const AddTaskModal = ({ visible, onClose, category, groupID }) => {
                         style={styles.input}
                     />
 
-                    {/* Task Description Input */}
                     <Text style={styles.label}>Task Description:</Text>
                     <TextInput
                         placeholder="Enter Task Description"
@@ -87,52 +98,22 @@ const AddTaskModal = ({ visible, onClose, category, groupID }) => {
                         blurOnSubmit
                     />
 
-                    {/* Assign To Dropdown */}
                     <Text style={styles.label}>Assign To:</Text>
-                    <TouchableOpacity
-                        onPress={() => setPickerVisible(true)}
+                    <Picker
+                        selectedValue={assignedTo}
+                        onValueChange={(value) => setAssignedTo(value)}
                         style={styles.input}
                     >
-                        <Text style={styles.dropdownText}>
-                            {assignedTo || "Select Assignee"}
-                        </Text>
-                    </TouchableOpacity>
+                        <Picker.Item label="Select Assignee" value="" />
+                        {[...roommates, {username: username, id:id }].map((roommate) => (
+                            <Picker.Item
+                                key={roommate.id}
+                                label={roommate.username}
+                                value={roommate.id}
+                            />
+                        ))}
+                    </Picker>
 
-                    {/* Picker Modal */}
-                    {isPickerVisible && (
-                        <Modal
-                            transparent
-                            animationType="fade"
-                            onRequestClose={() => setPickerVisible(false)}
-                        >
-                            <View style={styles.pickerModalOverlay}>
-                                <View style={styles.pickerContainer}>
-                                    <Picker
-                                        selectedValue={assignedTo}
-                                        onValueChange={(value) => {
-                                            setAssignedTo(value);
-                                            setPickerVisible(false);
-                                        }}
-                                    >
-                                        <Picker.Item label="Unassigned" value="" />
-                                        <Picker.Item label="You" value="You" />
-                                        <Picker.Item label="Teammate 1" value="Teammate 1" />
-                                        <Picker.Item label="Teammate 2" value="Teammate 2" />
-                                    </Picker>
-                                    <TouchableOpacity
-                                        onPress={() => setPickerVisible(false)}
-                                        style={styles.closePickerButton}
-                                    >
-                                        <Text style={styles.closePickerButtonText}>
-                                            Close
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </Modal>
-                    )}
-
-                    {/* Deadline Date Picker */}
                     <Text style={styles.label}>Deadline:</Text>
                     <TouchableOpacity
                         onPress={() => setDatePickerVisible(true)}
@@ -149,7 +130,6 @@ const AddTaskModal = ({ visible, onClose, category, groupID }) => {
                         onCancel={() => setDatePickerVisible(false)}
                     />
 
-                    {/* Save Button */}
                     <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
                         <Text style={styles.saveButtonText}>Save</Text>
                     </TouchableOpacity>
@@ -202,35 +182,11 @@ const styles = StyleSheet.create({
     dropdownText: {
         color: "#4B225F",
     },
-    pickerModalOverlay: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-    },
-    pickerContainer: {
-        width: "80%",
-        backgroundColor: "#FFFFFF",
-        borderRadius: 12,
-        padding: 20,
-    },
-    closePickerButton: {
-        marginTop: 10,
-        padding: 10,
-        backgroundColor: "#8A7191",
-        borderRadius: 8,
-        alignItems: "center",
-    },
-    closePickerButtonText: {
-        color: "#FFFFFF",
-        fontWeight: "bold",
-    },
     saveButton: {
         backgroundColor: "#8A7191",
         padding: 16,
         borderRadius: 8,
         alignItems: "center",
-        marginBottom: 8,
     },
     saveButtonText: {
         color: "#FFFFFF",
