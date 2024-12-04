@@ -17,7 +17,9 @@ const Task = () => {
                         style={styles.taskContainer}
                     >
                         <Text style={styles.taskTitle}>{task.title}</Text>
-                        <Text style={styles.taskDetails}>{`${task.startTime} - ${task.endTime} | ${task.created}`}</Text>
+                        <Text style={styles.taskDetails}>
+                            {`${task.startTime} - ${task.endTime} | Created by: ${task.createdBy}`}
+                        </Text>
                     </TouchableOpacity>
                 ))
             ) : (
