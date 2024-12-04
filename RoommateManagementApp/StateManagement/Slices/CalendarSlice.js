@@ -40,12 +40,12 @@ export const fetchTasksFromDB = createAsyncThunk(
 // Thunk to add a new task
 export const addTaskToDB = createAsyncThunk(
     "calendar/addTaskToDB",
-    async ({ groupID, date, task }, { rejectWithValue }) => {
+    async ({ groupID, date, task, createdBy }, { rejectWithValue }) => {
         try {
             if (!groupID) throw new Error("Group ID is undefined. Cannot create calendar event.");
 
             const taskID = uuid.v4();
-            const taskData = { ...task, id: taskID, date };
+            const taskData = { ...task, id: taskID, date, createdBy };
 
             const calendarRef = collection(db, `groups/${groupID}/calendarEvents`);
             await setDoc(doc(calendarRef, taskID), taskData);
