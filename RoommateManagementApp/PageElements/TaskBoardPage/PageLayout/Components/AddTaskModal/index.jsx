@@ -22,6 +22,7 @@ const AddTaskModal = ({ visible, onClose, categoryName }) => {
     const [assignedTo, setAssignedTo] = useState("");
     const [deadline, setDeadline] = useState("");
     const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+    const {username, id} = useSelector((state)=> state.user)
 
     const dispatch = useDispatch();
 
@@ -43,7 +44,7 @@ const AddTaskModal = ({ visible, onClose, categoryName }) => {
             return;
         }
     
-        const selectedRoommate = roommates.find((roommate) => roommate.id === assignedTo);
+        const selectedRoommate = [...roommates, {username: username, id:id }].find((roommate) => roommate.id === assignedTo);
     
         const newTask = {
             name: taskName,
@@ -104,7 +105,7 @@ const AddTaskModal = ({ visible, onClose, categoryName }) => {
                         style={styles.input}
                     >
                         <Picker.Item label="Select Assignee" value="" />
-                        {roommates.map((roommate) => (
+                        {[...roommates, {username: username, id:id }].map((roommate) => (
                             <Picker.Item
                                 key={roommate.id}
                                 label={roommate.username}

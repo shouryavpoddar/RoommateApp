@@ -13,6 +13,7 @@ const EditTaskModal = ({ visible, onClose, task, categoryName }) => {
     const [isDatePickerVisible, setDatePickerVisible] = useState(false);
     const [isPickerVisible, setPickerVisible] = useState(false);
     const [pickerValue, setPickerValue] = useState(null);
+    const {username, id} = useSelector((state)=> state.user)
 
     const dispatch = useDispatch();
 
@@ -35,7 +36,7 @@ const EditTaskModal = ({ visible, onClose, task, categoryName }) => {
         }
     
         // Find the selected roommate's username using `pickerValue`
-        const selectedRoommate = roommates.find((roommate) => roommate.id === pickerValue);
+        const selectedRoommate = [...roommates, {username: username, id:id }].find((roommate) => roommate.id === pickerValue);
     
         // Create the updated task with `assignedToName`
         const updatedTask = {
@@ -112,7 +113,7 @@ const EditTaskModal = ({ visible, onClose, task, categoryName }) => {
                     <Text style={styles.label}>Assign To:</Text>
                     <TouchableOpacity onPress={() => setPickerVisible(true)} style={styles.input}>
                         <Text style={styles.text}>
-                            {roommates.find((roommate) => roommate.id === pickerValue)?.username || pickerValue || "Unassigned"}
+                            {[...roommates, {username: username, id:id }].find((roommate) => roommate.id === pickerValue)?.username || pickerValue || "Unassigned"}
                         </Text>
                     </TouchableOpacity>
                     {isPickerVisible && (
@@ -130,7 +131,7 @@ const EditTaskModal = ({ visible, onClose, task, categoryName }) => {
                                             setPickerVisible(false);
                                         }}
                                     >
-                                        {roommates.map((roommate) => (
+                                        {[...roommates, {username: username, id:id }].map((roommate) => (
                                             <Picker.Item
                                                 key={roommate.id}
                                                 label={roommate.username}

@@ -18,6 +18,8 @@ const TaskCategoryPage = ({ categoryName, groupID }) => {
     // Get tasks for the current category
     const currentTasks = categories[categoryName] || [];
 
+    console.log(currentTasks)
+ 
     // Sort tasks by default (Pending first, then Done)
     const sortByDefault = (tasks) => {
         const pendingTasks = tasks.filter((task) => task.status !== 'done');
