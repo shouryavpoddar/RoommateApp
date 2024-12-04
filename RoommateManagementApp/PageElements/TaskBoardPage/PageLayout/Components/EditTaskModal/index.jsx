@@ -34,12 +34,14 @@ const EditTaskModal = ({ visible, onClose, task, categoryName }) => {
             return;
         }
     
+        // Find the selected roommate's username using `pickerValue`
         const selectedRoommate = roommates.find((roommate) => roommate.id === pickerValue);
     
+        // Create the updated task with `assignedToName`
         const updatedTask = {
             ...editedTask,
-            assignedTo: pickerValue || "Unassigned",
-            assignedToName: selectedRoommate ? selectedRoommate.username : "Unassigned",
+            assignedTo: pickerValue || "Unassigned", // Assign ID or default to "Unassigned"
+            assignedToName: selectedRoommate ? selectedRoommate.username : "Unassigned", // Resolve username or default
         };
     
         try {
@@ -51,11 +53,11 @@ const EditTaskModal = ({ visible, onClose, task, categoryName }) => {
                     updatedTask,
                 })
             ).unwrap();
-            onClose();
+            onClose(); // Close modal after saving
         } catch (error) {
             Alert.alert("Error", error.message || "Failed to edit task.");
         }
-    };    
+    };
 
     const toggleStatus = () => {
         const newStatus = editedTask.status === 'done' ? 'pending' : 'done';
@@ -109,7 +111,9 @@ const EditTaskModal = ({ visible, onClose, task, categoryName }) => {
                     />
                     <Text style={styles.label}>Assign To:</Text>
                     <TouchableOpacity onPress={() => setPickerVisible(true)} style={styles.input}>
-                        <Text style={styles.text}>{pickerValue || 'Select Assignee'}</Text>
+                        <Text style={styles.text}>
+                            {roommates.find((roommate) => roommate.id === pickerValue)?.username || pickerValue || "Unassigned"}
+                        </Text>
                     </TouchableOpacity>
                     {isPickerVisible && (
                         <Modal
