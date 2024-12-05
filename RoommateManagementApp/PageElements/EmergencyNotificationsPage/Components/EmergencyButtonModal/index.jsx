@@ -1,10 +1,13 @@
-import { useEffect, useContext, useState } from 'react'    
+import { useEffect, useContext, useState } from 'react';
 import { StyleSheet, Text, TextInput, Button, Modal, TouchableWithoutFeedback, View, Alert, Pressable } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { editEmergencyButton, deleteEmergencyButton } from '@/StateManagement/Slices/EmergencyButtonSlice';
 import { EmergencyContext } from '../../Context';
+import { sendEmergencyNotification } from '@/StateManagement/Slices/EmergencyButtonSlice';
 
 export default function EmergencyButtonModal() {
+    const user = useSelector((state) => state.user); 
+    const groupID = useSelector((state) => state.user.groupID);
     const { selectedButton, setSelectedButton } = useContext(EmergencyContext);
     const dispatch = useDispatch();
 
@@ -13,7 +16,6 @@ export default function EmergencyButtonModal() {
     const [editedMessage, setEditedMessage] = useState('');
     const [editedBgColor, setEditedBgColor] = useState('');
 
-    // only attempt setting title, message, and bgColor if there is a selected button
     useEffect(() => {
         if (selectedButton) {
             setEditedTitle(selectedButton.title || '');
@@ -25,46 +27,47 @@ export default function EmergencyButtonModal() {
     const closeModal = () => {
         setSelectedButton(null);
         setIsEditing(false);
-    }
+    };
 
-    // Handle updating the button
     const handleEdit = () => {
-        //only submit edit if data was set to valid inputs
         if (editedTitle.trim() !== '' && editedMessage.trim() !== '') {
             dispatch(editEmergencyButton({ buttonId: selectedButton.id, title: editedTitle, message: editedMessage, bgColor: editedBgColor }));
             setIsEditing(false);
-            closeModal()
-        }
-        //if inputs were invalid
-        else {
+            closeModal();
+        } else {
             Alert.alert('Error', 'Title and description must not be empty.');
         }
     };
 
-    //Handle sending notification
     const handleNotification = () => {
-        Alert.alert(`Emergency button ${selectedButton.title} pressed!`, `${selectedButton.message}`)
-        closeModal();
-    }
+        console.log(user);
+        if (!user || !user.id) {
+            Alert.alert('Error', 'User not authenticated!');
+            return;
+        }
 
-    // Handle deleting the task
+        // Send emergency notification to Firestore
+        dispatch(sendEmergencyNotification({
+            groupID,
+            selectedButton,
+            user: user,
+            timestamp: new Date().toISOString(), // Add timestamp if needed
+        }));
+
+        closeModal();
+    };
+
     const handleDelete = () => {
         dispatch(deleteEmergencyButton({ buttonId: selectedButton.id }));
-        closeModal()
+        closeModal();
     };
 
     if (!selectedButton) {
-        return null
+        return null;
     }
 
     return (
-        // visible={!!selectedButton} makes this only visible when there is a selected button
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={!!selectedButton}
-            onRequestClose={closeModal}
-        >
+        <Modal animationType="fade" transparent={true} visible={!!selectedButton} onRequestClose={closeModal}>
             <TouchableWithoutFeedback onPress={closeModal}>
                 <View style={styles.modalBackground}>
                     <TouchableWithoutFeedback>
@@ -74,28 +77,14 @@ export default function EmergencyButtonModal() {
                                     <Text style={styles.title}>Edit Emergency Button</Text>
 
                                     <Text style={styles.label}>Title</Text>
-                                    <TextInput
-                                        value={editedTitle}
-                                        placeholder='Enter title here'
-                                        onChangeText={setEditedTitle}
-                                        style={styles.input}
-                                    />
-                                    
+                                    <TextInput value={editedTitle} placeholder="Enter title here" onChangeText={setEditedTitle} style={styles.input} />
+
                                     <Text style={styles.label}>Message</Text>
-                                    <TextInput
-                                        value={editedMessage}
-                                        placeholder='Enter message here'
-                                        onChangeText={setEditedMessage}
-                                        style={styles.input}
-                                    />
+                                    <TextInput value={editedMessage} placeholder="Enter message here" onChangeText={setEditedMessage} style={styles.input} />
 
                                     <Text style={styles.label}>Background Color</Text>
-                                    <TextInput
-                                        value={editedBgColor}
-                                        placeholder='Enter color here'
-                                        onChangeText={setEditedBgColor}
-                                        style={styles.input}
-                                    />
+                                    <TextInput value={editedBgColor} placeholder="Enter color here" onChangeText={setEditedBgColor} style={styles.input} />
+
                                     <Pressable style={styles.saveButton} onPress={handleEdit}>
                                         <Text style={styles.buttonText}>Save</Text>
                                     </Pressable>
@@ -111,24 +100,17 @@ export default function EmergencyButtonModal() {
                                         <Text style={styles.buttonText}>Send Emergency Notification</Text>
                                     </Pressable>
 
-                                    {/* Only render edit and delete buttons if the button isn't marked as permanent */}
-                                    {!selectedButton.isPermanent ? (
+                                    {!selectedButton.isPermanent && (
                                         <>
-                                            <Pressable
-                                                onPress={() => setIsEditing(true)}
-                                                style={styles.editButton}
-                                            >
+                                            <Pressable onPress={() => setIsEditing(true)} style={styles.editButton}>
                                                 <Text style={styles.buttonText}>Edit</Text>
                                             </Pressable>
 
-                                            <Pressable
-                                                onPress={handleDelete}
-                                                style={styles.deleteButton}
-                                            >
+                                            <Pressable onPress={handleDelete} style={styles.deleteButton}>
                                                 <Text style={styles.buttonText}>Delete</Text>
                                             </Pressable>
                                         </>
-                                    ) : null}
+                                    )}
                                 </>
                             )}
                         </View>
