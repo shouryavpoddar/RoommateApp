@@ -4,6 +4,7 @@ import FeatureTile from "@/PageElements/HomePage/Components/FeatureTile";
 import Updates from "@/PageElements/HomePage/Components/RecentUpdates";
 import CalendarWidget from "@/PageElements/CalendarPage/Components/CalendarWidget/homeWidget";
 import EmergencyHomeWidget from '@/PageElements/EmergencyNotificationsPage/Components/EmergencyHomeWidget';
+import ChatHomeWidget from '@/PageElements/ChatPage/Components/ChatHomeWidget'
 import ExpensesWidget from '@/PageElements/ExpensesPage/Pages/FriendsPage/PageLayout/Components/ExpensesWidget'
 import TaskBoardWidget from '@/PageElements/TaskBoardPage/PageLayout/Components/TaskBoardWidget';
 import {useRouter} from "expo-router";
@@ -57,9 +58,10 @@ export default function HomePage() {
                     />
                     <FeatureTile
                         flex={1}
-                        bgColor="#FF5733" // red
-                        text="Tall Tile 2"
-                        onPress={() => console.log('Change me to navigation to go to a page!')}
+                        bgColor="#33FF57" // green
+                        text="Chat"
+                        TileComponent={ChatHomeWidget}
+                        onPress={() => {router.navigate('Chat')}}
                     />
                 </View>
 

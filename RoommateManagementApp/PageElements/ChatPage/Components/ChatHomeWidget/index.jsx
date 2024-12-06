@@ -1,14 +1,14 @@
-import { StyleSheet, TouchableWithoutFeedback, TouchableOpacity, View, Modal, Text, TextInput, Button, Alert } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-export default function EmergencyHomeWidget() {
+export default function ChatHomeWidget() {
 
     return (
         <View style={styles.tile}>
             <View style={styles.iconContainer}>
-                <Ionicons name="warning-outline" size={70} color="#FFF" />
+                <Ionicons name="chatbubble-outline" size={70} color="#FFF" />
             </View>
-            <Text style={styles.title}>Emergency Alerts</Text>
+            <Text style={styles.title}>Chat</Text>
         </View>
     );
 }
@@ -16,13 +16,13 @@ export default function EmergencyHomeWidget() {
 const styles = StyleSheet.create({
     tile: {
         flex: 1,
-        backgroundColor: "#D32F2F", // Red background
+        backgroundColor: "#388E3C", // Green background
         alignItems: "center", // Center content horizontally
         justifyContent: "center", // Center content vertically
         width: "100%", // Ensure it fills the available width
     },
     iconContainer: {
-        backgroundColor: "#FF4C4C", // Slightly lighter red for the icon background
+        backgroundColor: "#4CAF50", // Slightly lighter green for the icon background
         borderRadius: 50, // Make the icon's background circular
         padding: 20, // Add some padding around the icon
         marginTop: 10,

@@ -48,7 +48,8 @@ const styles = StyleSheet.create({
         padding: 16,
         backgroundColor: "#EDEFF7",
         borderRadius: 8,
-        margin: 16,
+        width: '100%',
+        //margin: 16,
     },
     title: {
         fontSize: 20,
