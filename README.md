@@ -30,7 +30,7 @@ To run this project locally:
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/shouryavpoddar/RoommateApp.git
-
+   ```
 	2.	Navigate to the project directory:
 
 cd RoommateApp/RoommateManagementApp
@@ -39,8 +39,6 @@ cd RoommateApp/RoommateManagementApp
 	3.	Install dependencies:
 
 npm install
-
-
 	4.	Configure Firebase:
 	•	Set up a Firebase project at Firebase Console.
 	•	Enable Authentication and Firestore Database.
@@ -49,13 +47,9 @@ npm install
 	•	For Android:
 
 npm run android
-
-
 	•	For iOS:
 
 npm run ios
-
-
 	•	For Web (Expo):
 
 npm start
@@ -75,5 +69,3 @@ This project is licensed under the MIT License. See the LICENSE file for details
 Contact
 
 For any inquiries or feedback, please contact Shourya Poddar.
-
-Let me know if you’d like to refine it further!
